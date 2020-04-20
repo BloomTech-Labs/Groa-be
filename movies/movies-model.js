@@ -5,22 +5,22 @@ module.exports = {
 }
 
 function getAllMovies(user_id) {
-    return db("imdb_movies as im")
+    return db("movies as m")
     .where("title_type", "movie")
     .select(
-        "im.movie_id as imdb_id",
-        "im.primary_title as name",
-        "im.start_year as year",
-        "im.runtime_minutes",
-        "im.genres",
-        "im.poster_url",
-        "im.average_rating",
-        "im.num_votes",
-        "im.release_date",
-        "im.original_language",
+        "m.movie_id as id",
+        "m.primary_title as name",
+        "m.start_year as year",
+        "m.runtime_minutes",
+        "m.genres",
+        "m.poster_url",
+        "m.average_rating",
+        "m.num_votes",
+        "m.release_date",
+        "m.original_language",
     )
-    .whereNotNull("im.average_rating")
-    .whereNotNull("im.poster_url")
-    .whereNotNull("im.num_votes")
-    .orderBy("im.num_votes", "desc")
+    .whereNotNull("m.average_rating")
+    .whereNotNull("m.poster_url")
+    .whereNotNull("m.num_votes")
+    .orderBy("m.num_votes", "desc")
 }
