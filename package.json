@@ -10,7 +10,7 @@
   "scripts": {
     "test": "cross-env DB_ENV=testing jest --watch --verbose --runInBand --collect-coverage",
     "start": "node index.js",
-    "server": "nodemon .",
+    "server": "nodemon index.js",
     "docs": "apidoc -i ./ -e node_modules -o ./docs"
   },
   "jest": {
