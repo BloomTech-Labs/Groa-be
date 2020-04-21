@@ -2,10 +2,10 @@ const { truncateTable } = require("../helpers/prepTestDB");
 
 exports.seed = function(knex) {
   // Deletes ALL existing entries
-  return truncateTable('user_groa_reviews')
+  return truncateTable('user_reviews')
     .then(function () {
       // Inserts seed entries
-      return knex('user_groa_reviews').insert([
+      return knex('user_reviews').insert([
         {
           date: new Date("2012-09-20" + "Z"),
           name: "Reservoir Dogs",
