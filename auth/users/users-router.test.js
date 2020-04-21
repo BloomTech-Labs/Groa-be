@@ -16,7 +16,7 @@ describe('Users Router', function() {
 
     });
     afterEach(async function() {
-        await db.raw('TRUNCATE user_groa_ratings RESTART IDENTITY CASCADE');
+        await db.raw('TRUNCATE user_ratings RESTART IDENTITY CASCADE');
     })
     describe('POST /api/users/register', function() {
         it ('should register a user', async function() {
