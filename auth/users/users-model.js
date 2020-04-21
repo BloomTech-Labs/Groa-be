@@ -39,14 +39,14 @@ function findUsers() {
 async function getUserData(user_name) {
   let user = await findBy(user_name)
   .select("*")
-  await db("user_groa_ratings")
+  await db("user_ratings")
   .where("user_id", user.id)
   .then(ratings => {
     user = {
       ...user, ratings
     }
   })
-  await db("user_groa_watchlist")
+  await db("user_watchlist")
   .where("user_id", user.id)
   .then(watchlist => {
     user = {
