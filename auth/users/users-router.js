@@ -34,19 +34,20 @@ router.post("/register", (req, res) => {
   const hash = bcrypt.hashSync(userData.password, ROUNDS);
   userData.password = hash;
   Users.findBy(userData.user_name)
-    .then(user => {
+    .then((user) => {
       if (!user) {
-        Users.add(userData).then(user => {
+        Users.add(userData).then((user) => {
           res.status(200).json({
             message: `Registration successful ${user.user_name}!`,
-            id: user.id
+            user_id: user.user_id,
           });
         });
       } else {
         res.status(400).json({ errorMessage: "Username already in use!" });
       }
     })
-    .catch(error => {
+    .catch((error) => {
+      console.log(error);
       res.status(500).json({ errorMessage: "Failed to register new user" });
     });
 });
@@ -76,13 +77,13 @@ router.post("/register", (req, res) => {
 router.post("/login", (req, res) => {
   let { user_name, password } = req.body;
   Users.getUserData(user_name)
-    .then(user => {
+    .then((user) => {
       if (user && bcrypt.compareSync(password, user.password)) {
         const token = signToken(user);
         res.status(200).json({
           message: `${user.user_name} Logged In!`,
           token,
-          id: user.id,
+          user_id: user.user_id,
           ratings: user.ratings,
           watchlist: user.watchlist,
         });
@@ -90,7 +91,7 @@ router.post("/login", (req, res) => {
         res.status(401).json({ message: "Failed to login" });
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
       res.status(500).json({ errorMessage: "Failed to retrieve credentials " });
     });
