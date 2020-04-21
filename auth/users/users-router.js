@@ -30,7 +30,8 @@ const Users = require("./users-model");
  */
 router.post("/register", (req, res) => {
   let userData = req.body;
-  const hash = bcrypt.hashSync(userData.password, process.env.ROUNDS || 8);
+  const ROUNDS = process.env.HASHING_ROUNDS || 8;
+  const hash = bcrypt.hashSync(userData.password, ROUNDS);
   userData.password = hash;
   Users.findBy(userData.user_name)
     .then(user => {
