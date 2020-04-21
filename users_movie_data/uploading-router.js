@@ -14,10 +14,10 @@ router.use(
 );
 
 // model functions
-const { addRating } = require("./models/user_groa_tables/ratings.js");
-const { addReview } = require("./models/user_groa_tables/reviews.js");
-const { addToWatched } = require("./models/user_groa_tables/watched.js");
-const { addToWatchList } = require("./models/user_groa_tables/watch_list.js");
+const { addRating } = require("./user_table_models/ratings.js");
+const { addReview } = require("./user_table_models/reviews.js");
+const { addToWatched } = require("./user_table_models/watched.js");
+const { addToWatchList } = require("./user_table_models/watch_list.js");
 const { getUserById, getUserData } = require("../auth/users/users-model");
 
 router.post("/:user_id/uploading", async (req, res) => {
