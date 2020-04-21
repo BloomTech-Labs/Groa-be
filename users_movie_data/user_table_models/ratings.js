@@ -53,9 +53,9 @@ function getRatingById(id) {
  */
 function getRatings(user_id) {
   return db("user_ratings as ur")
-    .innerJoin("imdb_movies", {
-      "imdb_movies.primary_title": "ur.name",
-      "imdb_movies.start_year": "ur.year",
+    .innerJoin("movies", {
+      "movies.primary_title": "ur.name",
+      "movies.start_year": "ur.year",
     })
     .select(
       "ur.id",
