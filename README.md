@@ -272,7 +272,7 @@ create a .env file that includes the following:
     *  RECOMMENDATION_URL_2 - This is the url for the data science reviews recommender, needed for generating recommendations
     *  JWT_SECRET - The secret used to assign encode tokens for authentication
     *  TOKEN_EXP - Variable in which the token expires, can be set to anything you like
-    * ROUNDS - adds rounds to the hashing
+    *  HASHING_ROUNDS - adds rounds to the hashing
 
 The respective values for these variables can be found on the Elastic Beanstalk environment in Configuration > Software > Environment properties
     
