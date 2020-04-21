@@ -1,9 +1,9 @@
-const db = require("../../../database/dbConfig.js");
+const db = require("../../database/dbConfig.js");
 
 module.exports = {
   addRating,
   getRatingById,
-  getRatings
+  getRatings,
 };
 
 /**
@@ -12,20 +12,20 @@ module.exports = {
  * @returns {ratedMovie}
  */
 async function addRating(rating) {
-  const ratings = await db("user_groa_ratings")
+  const ratings = await db("user_ratings")
     .select("*")
     .where("name", rating.name)
     .andWhere("year", rating.year)
     .andWhere("user_id", rating.user_id);
 
   if (ratings.length === 0) {
-    const ids = await db("user_groa_ratings").insert(rating, "id");
+    const ids = await db("user_ratings").insert(rating, "id");
 
     const [id] = ids;
     const added = await getRatingById(id);
     return added;
   } else {
-    const ids = await db("user_groa_ratings")
+    const ids = await db("user_ratings")
       .where("name", rating.name)
       .andWhere("year", rating.year)
       .andWhere("user_id", rating.user_id)
@@ -43,9 +43,7 @@ async function addRating(rating) {
  * @returns {ratedMovie}
  */
 function getRatingById(id) {
-  return db("user_groa_ratings")
-    .where("id", id)
-    .first();
+  return db("user_ratings").where("id", id).first();
 }
 
 /**
@@ -54,8 +52,11 @@ function getRatingById(id) {
  * @returns [{ratedMovie},{ratedMovie},...]
  */
 function getRatings(user_id) {
-  return db("user_groa_ratings as ur")
-    .innerJoin("imdb_movies", {"imdb_movies.primary_title": "ur.name", "imdb_movies.start_year": "ur.year"})
+  return db("user_ratings as ur")
+    .innerJoin("imdb_movies", {
+      "imdb_movies.primary_title": "ur.name",
+      "imdb_movies.start_year": "ur.year",
+    })
     .select(
       "ur.id",
       "ur.date",

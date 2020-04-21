@@ -1,21 +1,21 @@
-const db = require("../../../database/dbConfig.js");
+const db = require("../../database/dbConfig.js");
 
 module.exports = {
   addToWatchList,
   getWatchlist,
   getListItemById,
-  removeMovieFromWatchList
+  removeMovieFromWatchList,
 };
 
 async function addToWatchList(movie) {
-  await db("user_groa_watchlist")
+  await db("user_watchlist")
     .select("*")
     .where("name", movie.name)
     .andWhere("year", movie.year)
     .andWhere("user_id", movie.user_id)
-    .then(watchlist => {
+    .then((watchlist) => {
       if (watchlist.length === 0) {
-        return db("user_groa_watchlist").insert(movie, "id");
+        return db("user_watchlist").insert(movie, "id");
       }
     });
 }
@@ -26,8 +26,11 @@ async function addToWatchList(movie) {
  * @returns [{movie},{movie},...]
  */
 function getWatchlist(user_id) {
-  return db("user_groa_watchlist as wl")
-    .innerJoin("imdb_movies", {"imdb_movies.primary_title": "wl.name", "imdb_movies.start_year":"wl.year"})
+  return db("user_watchlist as wl")
+    .innerJoin("movies", {
+      "movies.primary_title": "wl.name",
+      "movies.start_year": "wl.year",
+    })
     .select(
       "wl.id",
       "wl.date",
@@ -40,17 +43,15 @@ function getWatchlist(user_id) {
 }
 
 function getListItemById(id) {
-  return db("user_groa_watchlist")
-    .where("id", id)
-    .first();
+  return db("user_watchlist").where("id", id).first();
 }
 
 function removeMovieFromWatchList(id) {
   return getListItemById(id).then(() => {
-    return db("user_groa_watchlist")
+    return db("user_watchlist")
       .where({ id })
       .del()
       .then(() => "Success")
-      .catch(err => err);
+      .catch((err) => err);
   });
 }

@@ -1,10 +1,10 @@
-const db = require("../../../database/dbConfig.js");
-const { prepTestingDB } = require("../../../helpers/prepTestDB.js");
+const db = require("../../database/dbConfig.js");
+const { prepTestingDB } = require("../../helpers/prepTestDB.js");
 
 const { addReview, getReviews, getReviewById } = require("./reviews.js");
 
 beforeAll(async() => {
-  prepTestingDB("user_groa_reviews")
+  prepTestingDB("user_reviews")
   prepTestingDB("users")
   await db.seed.run({ specific: '001-users.js' })
 });
