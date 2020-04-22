@@ -28,11 +28,12 @@ Express
 | ------ | ----------------------- | ------------------- | -------------------------------------------------- |
 | POST    | `/api/users/register` |  | Creates a new user. |
 | POST   | `/api/users/login` |  | Logs in an existing user. |
-| POST   | `/api/users/:id/uploading` |  | Uploads zip file from Letterboxd, unzips, parses and cleans each file and adds them to their respective tables in the database. If a movie with the same name and year exists on the users account it will update variable information in place. |
-| POST   | `/api/users/:id/add-movie-rating` |  | Adds a rating object to the groa_users_ratings table, If a movie with the same name and year exists on the users account it will update the rating information in place. |
-| GET   | `/api/users/:id/recommendations` |  | POSTs the user_id to the data science recommendation endpoint and then returns the newly added recommendations from the database or a prompt to add more reviews.|
-| GET   | `/api/users/:id/recommended` |  | Returns the latest recommendation from the database.|
-| GET   | `/api/users/:id/recommendation-history` |  | Returns an array of all recommendations found in the database.|
+| POST   | `/api/users/:user_id/uploading` |  | Uploads zip file from Letterboxd, unzips, parses and cleans each file and adds them to their respective tables in the database. If a movie with the same name and year exists on the users account it will update variable information in place. |
+| POST   | `/api/users/:user_id/add-movie-rating` |  | Adds a rating object to the groa_users_ratings table, If a movie with the same name and year exists on the users account it will update the rating information in place. |
+| GET   | `/api/users/:user_id/get-movies` |  | Returns a json file of all the movies in the database. |
+| GET   | `/api/users/:user_id/recommendations` |  | POSTs the user_id to the data science recommendation endpoint and then returns the newly added recommendations from the database or a prompt to add more reviews.|
+| GET   | `/api/users/:user_id/recommended` |  | Returns the latest recommendation from the database.|
+| GET   | `/api/users/:user_id/recommendation-history` |  | Returns an array of all recommendations found in the database.|
 
 
 
@@ -269,7 +270,6 @@ create a .env file that includes the following:
     *  DATABASE_URL - This is the url for thre Groa database needed to connect to our postgresQL on RDS 
     *  TESTING_DB_URL - This is the local test databaase url, it can be changed to whatever you need for your local setup
     *  RECOMMENDATION_URL - This is the url for the data science ratings recommender, needed for generating recommendations
-    *  RECOMMENDATION_URL_2 - This is the url for the data science reviews recommender, needed for generating recommendations
     *  JWT_SECRET - The secret used to assign encode tokens for authentication
     *  TOKEN_EXP - Variable in which the token expires, can be set to anything you like
     *  HASHING_ROUNDS - adds rounds to the hashing
