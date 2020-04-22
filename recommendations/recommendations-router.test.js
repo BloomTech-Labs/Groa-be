@@ -16,7 +16,7 @@ describe('Recommendation router', function() {
 
     });
     afterEach(async function() {
-        await db.raw('TRUNCATE user_groa_ratings RESTART IDENTITY CASCADE');
+        await db.raw('TRUNCATE user_ratings RESTART IDENTITY CASCADE');
     })
     describe('GET /api/users/:id/recommended', function() {
         it('should return recommendations for a given user', async function() {

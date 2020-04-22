@@ -1,9 +1,9 @@
 const { truncateTable } = require("../helpers/prepTestDB");
 
 exports.seed = function(knex) {
-  return truncateTable("imdb_movies").then(function() {
+  return truncateTable("movies").then(function() {
     // Inserts seed entries
-    return knex("imdb_movies").insert([
+    return knex("movies").insert([
       {
         primary_title: "Aladdin",
         year: 1992,

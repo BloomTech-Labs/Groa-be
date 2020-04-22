@@ -4,7 +4,7 @@ const router = require("express").Router();
 const {
   addRating,
   getRatings
-} = require("./models/user_groa_tables/ratings.js");
+} = require("./user_table_models/ratings.js");
 
 // middleware
 const validateRatingBody = require("./middleware/validateRatingBody.js");

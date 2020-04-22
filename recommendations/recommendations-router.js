@@ -75,39 +75,38 @@ const Recommendations = require("./recommendations-model");
  */
 router.get("/:id/recommendations", (req, res) => {
   const { id } = req.params;
+  Recommendations.getLatestRecommendations(id)
+    .then((res) => {
+      console.log(res)
+      if(res){
+        const recParams = res
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   axios
     .post(
-      process.env.RECOMMENDER_URL,
+      process.env.RECOMMENDATION_URL,
       {
         user_id: id,
-        number_of_recommendations: 50,
-        good_threshold: 5,
-        bad_threshold: 4,
-        harshness: 1
+        num_recs: 50,
+        good_threshold: 4,
+        bad_threshold: 3,
+        harshness: 1,
       },
       { headers: { "Content-Type": "application/json" } }
     )
-    .then(response => {
-      if (
-        response.data === "user_id not found" ||
-        response.data ===
-          "user_id not found in IMDB ratings or Letterboxd ratings"
-      ) {
-        res.status(404).json({
-          message: `Recommendations not available at this time, try adding your Letterboxd data. Received: ${response.data}`
-        });
+    .then((response) => {
+      if (response.status === 200) {
+        res.status(200).json(response.data.data);
       }
-      Recommendations.getLatestRecommendations(id).then(recommendations => {
-        if (recommendations) {
-          res.status(200).json(recommendations);
-        }
-      });
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
       res.status(500).json({
-        error,
-        errorMessage: "Could not retrieve any recommendations for your account."
+        errorMessage:
+          "Could not retrieve any recommendations for your account.",
       });
     });
 });
@@ -147,23 +146,24 @@ router.get("/:id/recommendations", (req, res) => {
  *  }
  *
  */
-router.get("/:id/recommended", (req, res) => {
-  const { id } = req.params;
-  Recommendations.getLatestRecommendations(id)
-    .then(recommendations => {
-      if (recommendations) {
-        res.status(200).json(recommendations);
-      }
-    })
-    .catch(error => {
-      console.log(error);
-      res.status(500).json({
-        error,
-        errorMessage:
-          "Could not retrieve any recommendations for your account, try uploading a file."
-      });
-    });
-});
+
+// router.get("/:id/recommended", (req, res) => {
+//   const { id } = req.params;
+//   Recommendations.getLatestRecommendations(id)
+//     .then((recommendations) => {
+//       if (recommendations) {
+//         res.status(200).json(recommendations);
+//       }
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//       res.status(500).json({
+//         error,
+//         errorMessage:
+//           "Could not retrieve any recommendations for your account, try uploading a file.",
+//       });
+//     });
+// });
 
 /**
  * @api {get} /users/:user_id/recommendation-history
@@ -204,23 +204,24 @@ router.get("/:id/recommended", (req, res) => {
  *  }
  *
  */
-router.get("/:id/recommendation-history", (req, res) => {
-  const { id } = req.params;
 
-  Recommendations.getAllRecommendations(id)
-    .then(recommendations => {
-      if (recommendations) {
-        res.status(200).json(recommendations);
-      }
-    })
-    .catch(error => {
-      console.log(error);
-      res.status(500).json({
-        error,
-        errorMessage:
-          "Could not retrieve any recommendations for your account, try uploading a file."
-      });
-    });
-});
+// router.get("/:id/recommendation-history", (req, res) => {
+//   const { id } = req.params;
+
+//   Recommendations.getAllRecommendations(id)
+//     .then((recommendations) => {
+//       if (recommendations) {
+//         res.status(200).json(recommendations);
+//       }
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//       res.status(500).json({
+//         error,
+//         errorMessage:
+//           "Could not retrieve any recommendations for your account, try uploading a file.",
+//       });
+//     });
+// });
 
 module.exports = router;

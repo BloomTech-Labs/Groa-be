@@ -10,12 +10,14 @@ module.exports = {
 
 function add(user) {
   return db("users")
-    .insert(user, "id")
+    .insert(user, "user_id")
     .then(ids => {
-      const [id] = ids;
+      const [user_id] = ids;
       return db("users")
-        .where({ id })
+        .where({ user_id })
         .first();
+    }).catch(error => {
+      console.log(error)
     });
 }
 
@@ -33,21 +35,21 @@ function getUserById(id) {
 
 function findUsers() {
   return db("users")
-    .select("user_name", "id")
+    .select("user_name", "user_id")
 }
 
 async function getUserData(user_name) {
   let user = await findBy(user_name)
   .select("*")
-  await db("user_groa_ratings")
-  .where("user_id", user.id)
+  await db("user_ratings")
+  .where("user_id", user.user_id)
   .then(ratings => {
     user = {
       ...user, ratings
     }
   })
-  await db("user_groa_watchlist")
-  .where("user_id", user.id)
+  await db("user_watchlist")
+  .where("user_id", user.user_id)
   .then(watchlist => {
     user = {
       ...user, watchlist
@@ -55,4 +57,3 @@ async function getUserData(user_name) {
   })
   return user;
 };
-

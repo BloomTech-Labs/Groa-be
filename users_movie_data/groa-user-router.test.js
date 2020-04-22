@@ -6,7 +6,7 @@ beforeEach(async function() {
   await db.raw("TRUNCATE users RESTART IDENTITY CASCADE");
 });
 afterEach(async function() {
-  await db.raw("TRUNCATE user_groa_ratings RESTART IDENTITY CASCADE");
+  await db.raw("TRUNCATE user_ratings RESTART IDENTITY CASCADE");
 });
 
 describe("POST /users/:user_id/add-movie-rating", () => {

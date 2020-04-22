@@ -5,7 +5,7 @@ const {
   addToWatchList,
   getWatchlist,
   removeMovieFromWatchList
-} = require("./models/user_groa_tables/watch_list.js");
+} = require("./user_table_models/watch_list.js");
 
 router.post("/:user_id/add-to-watchlist", (req, res) => {
   const movie = {
