@@ -15,27 +15,25 @@ To get the server running locally:
 
 Express
 
--    RESTful API
--    Straightforward sever construction
--    Stable and widely used
--    Can be built upon
+- RESTful API
+- Straightforward sever construction
+- Stable and widely used
+- Can be built upon
 
 ## Endpoints
 
 #### User Routes
 
-| Method | Endpoint                | Access Control      | Description                                        |
-| ------ | ----------------------- | ------------------- | -------------------------------------------------- |
-| POST    | `/api/users/register` |  | Creates a new user. |
-| POST   | `/api/users/login` |  | Logs in an existing user. |
-| POST   | `/api/users/:user_id/uploading` |  | Uploads zip file from Letterboxd, unzips, parses and cleans each file and adds them to their respective tables in the database. If a movie with the same name and year exists on the users account it will update variable information in place. |
-| POST   | `/api/users/:user_id/add-movie-rating` |  | Adds a rating object to the groa_users_ratings table, If a movie with the same name and year exists on the users account it will update the rating information in place. |
-| GET   | `/api/users/:user_id/get-movies` |  | Returns a json file of all the movies in the database. |
-| GET   | `/api/users/:user_id/recommendations` |  | POSTs the user_id to the data science recommendation endpoint and then returns the newly added recommendations from the database or a prompt to add more reviews.|
-| GET   | `/api/users/:user_id/recommended` |  | Returns the latest recommendation from the database.|
-| GET   | `/api/users/:user_id/recommendation-history` |  | Returns an array of all recommendations found in the database.|
-
-
+| Method | Endpoint                                     | Access Control | Description                                                                                                                                                                                                                                      |
+| ------ | -------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| POST   | `/api/users/register`                        |                | Creates a new user.                                                                                                                                                                                                                              |
+| POST   | `/api/users/login`                           |                | Logs in an existing user.                                                                                                                                                                                                                        |
+| POST   | `/api/users/:user_id/uploading`              |                | Uploads zip file from Letterboxd, unzips, parses and cleans each file and adds them to their respective tables in the database. If a movie with the same name and year exists on the users account it will update variable information in place. |
+| POST   | `/api/users/:user_id/add-movie-rating`       |                | Adds a rating object to the groa_users_ratings table, If a movie with the same name and year exists on the users account it will update the rating information in place.                                                                         |
+| GET    | `/api/users/:user_id/get-movies`             |                | Returns a json file of all the movies in the database.                                                                                                                                                                                           |
+| GET    | `/api/users/:user_id/recommendations`        |                | POSTs the user_id to the data science recommendation endpoint and then returns the newly added recommendations from the database or a prompt to add more reviews.                                                                                |
+| GET    | `/api/users/:user_id/recommended`            |                | Returns the latest recommendation from the database.                                                                                                                                                                                             |
+| GET    | `/api/users/:user_id/recommendation-history` |                | Returns an array of all recommendations found in the database.                                                                                                                                                                                   |
 
 # Data Model
 
@@ -45,7 +43,7 @@ Express
 
 ```
 {
-  id: INTEGER, INCREMENTS
+  user_id: INTEGER, INCREMENTS
   user_name: STRING, UNIQUE
   password: STRING,
   has_letterboxd: BOOLEAN,
@@ -54,43 +52,52 @@ Express
   email: STRING
 }
 ```
-#####  USER RATINGS
+
+#### USERS WATCHED
 
 ---
-##### IMDB
+
 ```
 {
+  user_id: INTEGER, INCREMENTS
+  movie_id: STRING
   date: DATE
-  name: STRING
-  year: DATE
-  rating: INTEGER
-  user_id: INTEGER
-  id: INTEGER
+  source: STRING
 }
 ```
+#### USERS WATCHLIST
 
 ---
-##### LETTERBOXD
+
 ```
 {
-  date: DATE
-  name: STRING
-  year: DATE
-  letterboxd_uri: STRING
-  rating: INTEGER
-  user_id: INTEGER
   id: INTEGER
+  user_id: INTEGER, INCREMENTS
+  movie_id: STRING
+  date: DATE
+  source: STRING
+}
+```
+#### USERS WILL NOT WATCHLIST
+
+---
+
+```
+{
+  id: INTEGER
+  user_id: INTEGER, INCREMENTS
+  movie_id: STRING
+  date: DATE
 }
 ```
 
 #### MOVIES
 
 ---
-##### IMDB/LETTERBOXD
 
 ```
 {
-  movie_id: INTEGER
+  movie_id: STRING
   title_type: MOVIE
   primary_title: STRING
   original_title: STRING
@@ -99,107 +106,78 @@ Express
   end_year: DATE: YYYY
   runtime_minutes: INTEGER
   genres: STRING
-}
-```
-
-####  RATINGS
-
----
-##### IMDB/LETTERBOXD
-```
-{
-  movie_id: INTEGER
-  average_rating: INTEGER
+  poster_url: STRING
+  avarage_rating: REAL
   num_votes: INTEGER
-  id: INTEGER
+  original_language: STRING
+  description: STRING
+  trailer_url: STRING
 }
 ```
 
-
-#### REVIEWS
+#### REVIEWS/RATINGS
 
 ---
-##### IMDB
+
+##### RATING
+
+---
 
 ```
 {
-  movie_id: INTEGER
-  review_date: DATE
-  user_rating: INTEGER
-  helpful_num: INTEGER
-  helpful_denom: INTEGER
-  user_name: STRING
-  review_text: STRING
-  review_title: STRING
-  review_id: INTEGER
-  id: INTEGER
+  rating_id: INTEGER
+  user_id: INTEGER
+  movie_id: STRING
+  date: DATE
+  rating: REAL
+  source: STRING
 }
 ```
+
+##### REVIEW
+
 ---
-##### LETTERBOXD
 
 ```
 {
-  movie_id: INTEGER
-  review_date: DATE
-  user_rating: INTEGER
-  review_text: STRING
-  review_title: STRING
   review_id: INTEGER
-  user_name: STRING
+  user_id: INTEGER
+  movie_id: STRING
+  date: DATE
+  review_title: STRING
+  review_text: STRING
+  tags: STRING
+  source: STRING
 }
 ```
+
 #### RECOMMENDATIONS
 
 ---
-##### /:ID/RECOMMENDED
+
 ##### /:ID/RECOMMENDATIONS
 
+---
+
 ```
-{
-  recommendation_json: [
     {
-      Title: STRING
-      Year: DATE
-      IMDB URL: STRING
-      Mean Rating: FLOAT
-      Votes: INTEGER
-      Similarity: FLOAT
-      ID: INTEGER
-      Gem: BOOLEAN
-      Poster URL: STRING
+      movie_id: STRING,
+      score: INTEGER,
+      title: STRING,
+      year: INTEGER,
+      genres: [
+        STRING
+      ],
+      poster_url: STRING
     }
 ```
----
-##### /:ID/RECOMMENDATION-HISTORY
-```
-[
-  {
-    user_id: INTEGER
-    recommendation_id: STRING
-    recommendation_json: [
-      {
-        Title: STRING
-        Year: DATE
-        IMDB URL: STRING
-        Mean Rating: FLOAT
-        Votes: INTEGER
-        Similarity: FLOAT
-        ID: INTEGER
-        Gem: BOOLEAN
-        Poster URL: STRING
-      },
-      ...
-    ],
-    date: DATE
-    model_type: STRING
-  }
-```
----
 
 #### UPLOADING
 
+---
+
 ```
+
 {
   user_id: INTEGER
   user_name: STRING
@@ -217,21 +195,7 @@ Express
   ]
 }
 ```
----
 
-#### RATING
-
-```
-
-{
-  id: INTEGER
-  date: DATE TIMESTAMP
-  name: STRING
-  year: INTEGER
-  rating: INTEGER FLOAT
-  user_id: INTEGER
-}
-```
 ---
 
 ## Actions
@@ -254,28 +218,27 @@ Express
 
 `addToWatched()` -> Takes watched.csv file from zip upload and adds to user_letterboxd_watched.
 
-`getUserData(id)` -> Returns all user_groa_ratings, _reviews, and _watchlist, and user_letteroxd_watched items found in the database for a given user_id.
+`getUserData(id)` -> Returns all user_groa_ratings, \_reviews, and \_watchlist, and user_letteroxd_watched items found in the database for a given user_id.
 
 `getLatestRecommendations(id)` -> Returns the latest recommendations found in the database.
 
 `getAllRecommendations(id)` -> Returns all recommendatios associated with the users account.
-
 
 ## Environment Variables
 
 In order for the app to function correctly, the user must set up their own environment variables.
 
 create a .env file that includes the following:
-    
-    *  DATABASE_URL - This is the url for thre Groa database needed to connect to our postgresQL on RDS 
-    *  TESTING_DB_URL - This is the local test databaase url, it can be changed to whatever you need for your local setup
-    *  RECOMMENDATION_URL - This is the url for the data science ratings recommender, needed for generating recommendations
-    *  JWT_SECRET - The secret used to assign encode tokens for authentication
-    *  TOKEN_EXP - Variable in which the token expires, can be set to anything you like
-    *  HASHING_ROUNDS - adds rounds to the hashing
+  
+ _ DATABASE_URL - This is the url for thre Groa database needed to connect to our postgresQL on RDS
+_ TESTING_DB_URL - This is the local test databaase url, it can be changed to whatever you need for your local setup
+_ RECOMMENDATION_URL - This is the url for the data science ratings recommender, needed for generating recommendations
+_ JWT_SECRET - The secret used to assign encode tokens for authentication
+_ TOKEN_EXP - Variable in which the token expires, can be set to anything you like
+_ HASHING_ROUNDS - adds rounds to the hashing
 
 The respective values for these variables can be found on the Elastic Beanstalk environment in Configuration > Software > Environment properties
-    
+
 ## Contributing
 
 When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change.
@@ -284,11 +247,12 @@ Please note we have a [code of conduct](./code_of_conduct.md). Please follow it 
 
 ### Issue/Bug Request
 
- **If you are having an issue with the existing project code, please submit a bug report under the following guidelines:**
- - Check first to see if your issue has already been reported.
- - Check to see if the issue has recently been fixed by attempting to reproduce the issue using the latest master branch in the repository.
- - Create a live example of the problem.
- - Submit a detailed bug report including your environment & browser, steps to reproduce the issue, actual and expected outcomes,  where you believe the issue is originating from, and any potential solutions you have considered.
+**If you are having an issue with the existing project code, please submit a bug report under the following guidelines:**
+
+- Check first to see if your issue has already been reported.
+- Check to see if the issue has recently been fixed by attempting to reproduce the issue using the latest master branch in the repository.
+- Create a live example of the problem.
+- Submit a detailed bug report including your environment & browser, steps to reproduce the issue, actual and expected outcomes, where you believe the issue is originating from, and any potential solutions you have considered.
 
 ### Feature Requests
 
@@ -315,5 +279,5 @@ These contribution guidelines have been adapted from [this good-Contributing.md-
 ## Documentation
 
 See [Frontend Documentation](https://github.com/Lambda-School-Labs/Groa-fe/blob/master/README.md) for details on the front end of our project.
-see [Data Science](https://github.com/Lambda-School-Labs/Groa-ds/blob/master/README.md) for details on 
+see [Data Science](https://github.com/Lambda-School-Labs/Groa-ds/blob/master/README.md) for details on
 the Data Science of our project.
