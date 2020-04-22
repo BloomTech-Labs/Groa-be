@@ -37,7 +37,7 @@ function getWatchlist(user_id) {
       "wl.name",
       "wl.year",
       "wl.user_id",
-      "imdb_movies.poster_url"
+      "movies.poster_url"
     )
     .where("wl.user_id", user_id);
 }
