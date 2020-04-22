@@ -30,25 +30,36 @@ const Users = require("./users-model");
  */
 router.post("/register", (req, res) => {
   let userData = req.body;
-  const ROUNDS = process.env.HASHING_ROUNDS || 8;
-  const hash = bcrypt.hashSync(userData.password, ROUNDS);
+  // process.env.HASHING_ROUNDS should be used at a later time.
+  const hash = bcrypt.hashSync(userData.password, 12);
   userData.password = hash;
   Users.findBy(userData.user_name)
     .then((user) => {
       if (!user) {
-        Users.add(userData).then((user) => {
-          res.status(200).json({
-            message: `Registration successful ${user.user_name}!`,
-            user_id: user.user_id,
+        Users.add(userData)
+          .then((user) => {
+            res.status(200).json({
+              message: `Registration successful ${user.user_name}!`,
+              user_id: user.user_id,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).json({
+              errorMessage: "Failed to register new user",
+            });
           });
-        });
       } else {
-        res.status(400).json({ errorMessage: "Username already in use!" });
+        res.status(400).json({
+          errorMessage: "Username already in use!",
+        });
       }
     })
     .catch((error) => {
       console.log(error);
-      res.status(500).json({ errorMessage: "Failed to register new user" });
+      res.status(500).json({
+        errorMessage: "Failed to register new user",
+      });
     });
 });
 
