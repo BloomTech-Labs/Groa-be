@@ -14,8 +14,7 @@ module.exports = {
 async function addRating(rating) {
   const ratings = await db("user_ratings")
     .select("*")
-    .where("name", rating.name)
-    .andWhere("year", rating.year)
+    .where("movie_id", rating.movie_id)
     .andWhere("user_id", rating.user_id);
 
   if (ratings.length === 0) {
@@ -26,8 +25,7 @@ async function addRating(rating) {
     return added;
   } else {
     const ids = await db("user_ratings")
-      .where("name", rating.name)
-      .andWhere("year", rating.year)
+      .where("movie_id", rating.movie_id)
       .andWhere("user_id", rating.user_id)
       .update("rating", rating.rating, "id");
 
