@@ -91,8 +91,8 @@ router.get("/:id/recommendations", (req, res) => {
       {
         user_id: id,
         num_recs: 50,
-        good_threshold: 4,
-        bad_threshold: 3,
+        good_threshold: 3.5,
+        bad_threshold: 2.5,
         harshness: 1,
       },
       { headers: { "Content-Type": "application/json" } }
@@ -147,23 +147,23 @@ router.get("/:id/recommendations", (req, res) => {
  *
  */
 
-// router.get("/:id/recommended", (req, res) => {
-//   const { id } = req.params;
-//   Recommendations.getLatestRecommendations(id)
-//     .then((recommendations) => {
-//       if (recommendations) {
-//         res.status(200).json(recommendations);
-//       }
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//       res.status(500).json({
-//         error,
-//         errorMessage:
-//           "Could not retrieve any recommendations for your account, try uploading a file.",
-//       });
-//     });
-// });
+router.get("/:id/recommended", (req, res) => {
+  const { id } = req.params;
+  Recommendations.getAllRecommendations(id)
+    .then((recommendations) => {
+      if (recommendations) {
+        res.status(200).json(recommendations);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({
+        error,
+        errorMessage:
+          "Could not retrieve any recommendations for your account, try uploading a file.",
+      });
+    });
+});
 
 /**
  * @api {get} /users/:user_id/recommendation-history
