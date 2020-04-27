@@ -1,6 +1,19 @@
+Putting descriptive tags to clean up the PR template as well as creating a section for staging environment links.
+
 # Description
 
-Fixes # (issue)
+[TRY ME](#add your staged deployment link here)
+
+Fixes # (issue) <-- this is for issue numbers from GitHub,
+if squashing a bug from Trello, please add a link to that card here instead
+
+Please add a list of what someone reviewing the PR
+should be expecting from this PR.
+This will include the
+
+- functionality you created/updated
+- packages you added and why you added them
+- documentation you added
 
 ## Type of change
 
