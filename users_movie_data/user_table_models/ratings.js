@@ -18,7 +18,7 @@ async function addRating(rating) {
     .andWhere("user_id", rating.user_id);
 
   if (ratings.length === 0) {
-    const ids = await db("user_ratings").insert(rating, "id");
+    const ids = await db("user_ratings").insert(rating, "rating_id");
 
     const [id] = ids;
     const added = await getRatingById(id);
@@ -27,7 +27,7 @@ async function addRating(rating) {
     const ids = await db("user_ratings")
       .where("movie_id", rating.movie_id)
       .andWhere("user_id", rating.user_id)
-      .update("rating", rating.rating, "id");
+      .update("rating", rating.rating, "rating_id");
 
     const [id] = ids;
     const updated = await getRatingById(id);
@@ -41,7 +41,7 @@ async function addRating(rating) {
  * @returns {ratedMovie}
  */
 function getRatingById(id) {
-  return db("user_ratings").where("id", id).first();
+  return db("user_ratings").where("rating_id", id).first();
 }
 
 /**
