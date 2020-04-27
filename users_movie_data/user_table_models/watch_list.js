@@ -10,8 +10,7 @@ module.exports = {
 async function addToWatchList(movie) {
   await db("user_watchlist")
     .select("*")
-    .where("name", movie.name)
-    .andWhere("year", movie.year)
+    .where("movie_id", movie.movie_id)
     .andWhere("user_id", movie.user_id)
     .then((watchlist) => {
       if (watchlist.length === 0) {
@@ -27,17 +26,14 @@ async function addToWatchList(movie) {
  */
 function getWatchlist(user_id) {
   return db("user_watchlist as wl")
-    .innerJoin("movies", {
-      "movies.primary_title": "wl.name",
-      "movies.start_year": "wl.year",
-    })
+    .innerJoin("movies as m", "wl.movie_id", "=", "m.movie_id")
     .select(
       "wl.id",
       "wl.date",
-      "wl.name",
-      "wl.year",
+      "m.primary_title",
+      "m.start_year",
       "wl.user_id",
-      "movies.poster_url"
+      "m.poster_url"
     )
     .where("wl.user_id", user_id);
 }
