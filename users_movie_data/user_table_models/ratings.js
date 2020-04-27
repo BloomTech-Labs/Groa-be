@@ -56,15 +56,16 @@ function getRatings(user_id) {
     .innerJoin("movies", {
       "movies.primary_title": "ur.name",
       "movies.start_year": "ur.year",
+      "movies.poster_url": "ur.poster"
     })
     .select(
-      "ur.id",
+      "ur.rating_id",
       "ur.date",
       "ur.name",
       "ur.year",
       "ur.rating",
       "ur.user_id",
-      "movies.poster_url"
+      "ur.poster"
     )
     .where("ur.user_id", user_id);
 }
