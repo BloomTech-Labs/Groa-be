@@ -40,8 +40,7 @@ const validateRatingBody = require("./middleware/validateRatingBody.js");
 router.post("/:user_id/add-movie-rating", validateRatingBody, (req, res) => {
   const newRating = {
     date: new Date(),
-    name: req.body.name,
-    year: Number(req.body.year),
+    movie_id: req.body.movie_id,
     rating: req.body.rating * 1,
     user_id: Number(req.params.user_id)
   };

@@ -14,22 +14,20 @@ module.exports = {
 async function addRating(rating) {
   const ratings = await db("user_ratings")
     .select("*")
-    .where("name", rating.name)
-    .andWhere("year", rating.year)
+    .where("movie_id", rating.movie_id)
     .andWhere("user_id", rating.user_id);
 
   if (ratings.length === 0) {
-    const ids = await db("user_ratings").insert(rating, "id");
+    const ids = await db("user_ratings").insert(rating, "rating_id");
 
     const [id] = ids;
     const added = await getRatingById(id);
     return added;
   } else {
     const ids = await db("user_ratings")
-      .where("name", rating.name)
-      .andWhere("year", rating.year)
+      .where("movie_id", rating.movie_id)
       .andWhere("user_id", rating.user_id)
-      .update("rating", rating.rating, "id");
+      .update("rating", rating.rating, "rating_id");
 
     const [id] = ids;
     const updated = await getRatingById(id);
@@ -43,7 +41,7 @@ async function addRating(rating) {
  * @returns {ratedMovie}
  */
 function getRatingById(id) {
-  return db("user_ratings").where("id", id).first();
+  return db("user_ratings").where("rating_id", id).first();
 }
 
 /**
@@ -56,15 +54,16 @@ function getRatings(user_id) {
     .innerJoin("movies", {
       "movies.primary_title": "ur.name",
       "movies.start_year": "ur.year",
+      "movies.poster_url": "ur.poster"
     })
     .select(
-      "ur.id",
+      "ur.rating_id",
       "ur.date",
       "ur.name",
       "ur.year",
       "ur.rating",
       "ur.user_id",
-      "movies.poster_url"
+      "ur.poster"
     )
     .where("ur.user_id", user_id);
 }
