@@ -4,6 +4,9 @@ const { signToken } = require("../authenticate-middleware.js");
 const router = express.Router();
 
 const Users = require("./users-model");
+const client = require('../../config/oktaClient');
+ 
+
 
 /**
  * @api {post} /api/users/register
@@ -29,39 +32,62 @@ const Users = require("./users-model");
  *  }
  */
 router.post("/register", (req, res) => {
-  let userData = req.body;
-  // process.env.HASHING_ROUNDS should be used at a later time.
-  const hash = bcrypt.hashSync(userData.password, 12);
-  userData.password = hash;
-  Users.findBy(userData.user_name)
-    .then((user) => {
-      if (!user) {
-        Users.add(userData)
-          .then((user) => {
-            res.status(200).json({
-              message: `Registration successful ${user.user_name}!`,
-              user_id: user.user_id,
-            });
-          })
-          .catch((err) => {
-            console.log(err);
-            res.status(500).json({
-              errorMessage: "Failed to register new user",
-            });
-          });
-      } else {
-        res.status(400).json({
-          errorMessage: "Username already in use!",
-        });
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).json({
-        errorMessage: "Failed to register new user",
-      });
-    });
+  const { firstName, lastName, email, } = req.body;
+
+  console.log(req.body);
+
+  const newUser = {
+    profile: {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      login: email,
+    },
+  };
+   
+  client.createUser(newUser,)
+  .then(user => {
+    res.status(200).json({created: user})
+  })
+  .catch(err => res.status(501).json({error: err}));
+
 });
+
+
+
+//   let userData = req.body;
+//   // process.env.HASHING_ROUNDS should be used at a later time.
+//   const hash = bcrypt.hashSync(userData.password, 12);
+//   userData.password = hash;
+//   Users.findBy(userData.user_name)
+//     .then((user) => {
+//       if (!user) {
+//         Users.add(userData)
+//           .then((user) => {
+//             res.status(200).json({
+//               message: `Registration successful ${user.user_name}!`,
+//               user_id: user.user_id,
+//             });
+//           })
+//           .catch((err) => {
+//             console.log(err);
+//             res.status(500).json({
+//               errorMessage: "Failed to register new user",
+//             });
+//           });
+//       } else {
+//         res.status(400).json({
+//           errorMessage: "Username already in use!",
+//         });
+//       }
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//       res.status(500).json({
+//         errorMessage: "Failed to register new user",
+//       });
+//     });
+// });
 
 /**
  * @api {post} /api/users/login
