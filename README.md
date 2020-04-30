@@ -2,7 +2,7 @@
 
 #### Backend delpoyed at [AWS Elastic Beanstalk](https://api.groa.us) <br>
 
-## Getting started
+## Getting started!
 
 To get the server running locally:
 
