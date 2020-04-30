@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/Lambda-School-Labs/Groa-be#readme",
   "dependencies": {
-    "@okta/oidc-middleware": "^4.0.1",
+    "@okta/jwt-verifier": "^1.0.0",
     "@okta/okta-sdk-nodejs": "^3.2.0",
     "apidoc": "^0.20.1",
     "axios": "^0.19.2",

@@ -8,7 +8,7 @@ const recommendationsRouter = require("../recommendations/recommendations-router
 const groaUserRatingRouter = require("../users_movie_data/groa-user-rating-router.js");
 const groaWatchListRouter = require("../users_movie_data/groa-watchlist-router.js");
 const movieRouter = require("../movies/movies-router")
-
+const authentincationRequired = require('../config/authenticationRequired');
 const server = express();
 
 server.use(helmet());
@@ -21,9 +21,12 @@ server.use(express.json());
 
 server.use("/docs", express.static("./docs"));
 server.use(
-  "/api/users",
+  "/api/users", 
   userRouter,
-  // these should all be protected routes
+  // OKTA Route Protection middleware
+  authentincationRequired,
+
+  //GROA BE Routes
   uploadingRouter,
   recommendationsRouter,
   groaUserRatingRouter,
@@ -47,8 +50,8 @@ server.use(
  *  "Error: Couldn't connect to server"
  *
  */
-server.get("/", (req, res) => {
-  res.status(200).json("Welcome to the Backend of Groa");
+server.get("/", authentincationRequired, (req, res) => {
+  res.status(200).json("Welcome to the Backend of Groa, if you are seen this you are logged in");
 });
 
 module.exports = server;
