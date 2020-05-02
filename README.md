@@ -1,7 +1,7 @@
 # Code Climate
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/fa3fc0912abcb80056d3/maintainability)](https://codeclimate.com/github/Lambda-School-Labs/Groa-be/maintainability)
-
+[![Test Coverage](https://api.codeclimate.com/v1/badges/fa3fc0912abcb80056d3/test_coverage)](https://codeclimate.com/github/Lambda-School-Labs/Groa-be/test_coverage)
 
 # API Documentation
 
