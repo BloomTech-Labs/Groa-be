@@ -1,5 +1,5 @@
-const db = require('../database/dbConfig')
-const RECOMMENDATIONS = require('./recommendations-model')
+const db = require('../../database/dbConfig')
+const RECOMMENDATIONS = require('../recommendations-model')
 
 describe('recommendations-model', function() {
     describe('test environment', function() {

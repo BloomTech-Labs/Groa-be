@@ -1,7 +1,7 @@
-const db = require("../database/dbConfig.js");
+const db = require("../../database/dbConfig.js");
 const { prepTestingDB } = require("../../helpers/prepTestDB.js");
 
-const { addReview, getReviews, getReviewById } = require("./reviews.js");
+const { addReview, getReviews, getReviewById } = require("../reviews.js");
 
 beforeAll(async () => {
   prepTestingDB("user_reviews");

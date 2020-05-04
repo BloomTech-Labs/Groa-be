@@ -5,7 +5,7 @@ const {
   addToWatchList,
   getWatchlist,
   getListItemById
-} = require("./watch_list.js");
+} = require("../watch_list.js");
 
 beforeEach(async () => {
   prepTestingDB("user_groa_watchlist");
