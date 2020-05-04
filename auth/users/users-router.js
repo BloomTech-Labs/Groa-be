@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
 const Users = require("./users-model");
 const client = require('../../config/oktaClient');
 
@@ -30,6 +29,7 @@ const client = require('../../config/oktaClient');
  */
 router.post("/register", (req, res) => {
 
+  console.log('REQUESTSSS', req.body);
   const { firstName, lastName, email } = req.body;
 
   // user object to be passed to okta api to create a new user, (must be in exact order per api guidelines)
@@ -46,7 +46,7 @@ router.post("/register", (req, res) => {
   client.createUser(newUser,)
   .then(user => {
 
-    //user object that will be posted to GROA BE
+    //user object that will be posted to GROA BE to keep recommendation model working
     const userTable = {
       user_name: email,
       okta_id: user.id,

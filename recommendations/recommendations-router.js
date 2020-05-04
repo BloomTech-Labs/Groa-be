@@ -1,6 +1,5 @@
 const express = require("express");
 const axios = require("axios");
-const { authToken } = require("../auth/authenticate-middleware");
 const router = express.Router();
 
 const Recommendations = require("./recommendations-model");

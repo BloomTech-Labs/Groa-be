@@ -24,17 +24,18 @@ describe('Users Router', function() {
                 .post('/api/users/register')
                 .send(
                     { 
-                        user_name: 'user1', 
-                        password: 'password',
-                        email: 'name@email.com'
+                        firstName: 'user1111111111255', 
+                        lastName: 'passwor1111111d251',
+                        email: 'namee11112151ee@email.com'
                     }
                 )
                 .then(res => {
                     expect(res.type).toMatch(/json/i);
-                    expect(res.body).toEqual(expect.objectContaining(
+                    expect(res.body).toContain(expect.objectContaining(
                         {
-                            "id": 1, 
-                            "message": "Registration successful user1!"
+                            "message": expect.any(String),
+                            "user_id": expect.any(Number),
+                            "okta_id": expect.any(String),
                         }
                     ));
                 })
@@ -53,37 +54,4 @@ describe('Users Router', function() {
                 })
         });
     });
-    describe('POST /api/users/login', function() {
-        it ('should login a user', async function() {
-            await request(server)
-                .post('/api/users/register')
-                .send(
-                    { 
-                        user_name: 'User2', 
-                        password: 'pass1234',
-                        email: 'name@email.com'
-                    }
-                )
-            await request(server)
-                .post('/api/users/login')
-                .send(
-                    { 
-                        user_name: 'User2', 
-                        password: 'pass1234'
-                    }
-                )
-                .expect(200);
-            });
-        it ('should NOT login a user', async function() {
-            await request(server)
-                .post('/api/users/login')
-                .send(
-                    { 
-                        user_name: 'User5', 
-                        password: 'pass1234' 
-                    }
-                )
-                .expect(401);
-        });
-    });
-});
+})
