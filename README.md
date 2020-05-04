@@ -16,6 +16,7 @@ To get the server running locally:
 Express
 
 - RESTful API
+
 - Straightforward sever construction
 - Stable and widely used
 - Can be built upon
