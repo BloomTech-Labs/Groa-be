@@ -27,10 +27,9 @@ function findBy(user_name) {
     .first();
 }
 
-function getUserById(id) {
+function getUserById(user_id) {
   return db("users")
-    .where({ id })
-    .first();
+    .where("user_id" ,user_id)
 }
 
 function findUsers() {

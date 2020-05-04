@@ -74,7 +74,6 @@ const Recommendations = require("./recommendations-model");
  *
  */
 router.get("/:id/recommendations", (req, res) => {
-  console.log("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ",req)
   const { id } = req.params;
   Recommendations.getLatestRecommendations(id)
     .then((res) => {

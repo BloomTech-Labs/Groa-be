@@ -24,7 +24,7 @@ server.use(
   "/api/users", 
   userRouter,
   // OKTA Route Protection middleware
-  authentincationRequired,
+  // authentincationRequired,
 
   //GROA BE Routes
   uploadingRouter,

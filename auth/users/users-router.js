@@ -33,8 +33,6 @@ router.post("/register", (req, res) => {
 
   const { firstName, lastName, email } = req.body;
 
-  console.log(req.body);
-
   const newUser = {
     profile: {
       firstName: firstName,
@@ -43,7 +41,7 @@ router.post("/register", (req, res) => {
       login: email,
     },
   };
-   
+
   client.createUser(newUser,)
   .then(user => {
 
@@ -53,46 +51,91 @@ router.post("/register", (req, res) => {
       })
   })
   .catch(err => res.status(501).json({error: err}));
+  
 
-});
+  const userTable = {
+    user_name: email,
+    okta_id: 'supertestID',
+    email: email,
+  }
+
+  Users.findBy(userTable.user_name)
+    .then((user) => {
+      console.log('this is USER |||||||||||||||', user);
+      if (!user) {
+        Users.add(userTable)
+          .then((user) => {
+            res.status(200).json({
+              message: `Registration successful ${user.user_name}!`,
+              user_id: user.user_id,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).json({
+              errorMessage: "Failed to register new user 1",
+              error: err,
+            });
+          });
+      } else {
+        res.status(400).json({
+          errorMessage: "Username already in use!",
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({
+        errorMessage: "Failed to register new user  2",
+        error: error,
+      });
+    });
+})
+   
+
+router.get("/:id/registerid", (req, res) => {
+  Users.getUserById(req.params.id)
+    .then(res => {
+      console.log('response|||||||||||||||||||||||||', res);
+      res.send.json([res]);
+    })
+    .catch(err => console.log('error fetching id', err))
+})
 
 
+  // let userData = req.body;
+  // process.env.HASHING_ROUNDS should be used at a later time.
+  // const hash = bcrypt.hashSync(userData.password, 12);
+  // userData.password = hash;
+  // Users.findBy(req.body.user_name)
+  //   .then((user) => {
+  //     if (!user) {
+  //       Users.add(userData)
+  //         .then((user) => {
+  //           res.status(200).json({
+  //             message: `Registration successful ${user.user_name}!`,
+  //             user_id: user.user_id,
+  //           });
+  //         })
+  //         .catch((err) => {
+  //           console.log(err);
+  //           res.status(500).json({
+  //             errorMessage: "Failed to register new user",
+  //           });
+  //         });
+  //     } else {
+  //       res.status(400).json({
+  //         errorMessage: "Username already in use!",
+  //       });
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //     res.status(500).json({
+  //       errorMessage: "Failed to register new user",
+  //     });
+  //   });
 
-
-
-//   let userData = req.body;
-//   // process.env.HASHING_ROUNDS should be used at a later time.
-//   const hash = bcrypt.hashSync(userData.password, 12);
-//   userData.password = hash;
-//   Users.findBy(userData.user_name)
-//     .then((user) => {
-//       if (!user) {
-//         Users.add(userData)
-//           .then((user) => {
-//             res.status(200).json({
-//               message: `Registration successful ${user.user_name}!`,
-//               user_id: user.user_id,
-//             });
-//           })
-//           .catch((err) => {
-//             console.log(err);
-//             res.status(500).json({
-//               errorMessage: "Failed to register new user",
-//             });
-//           });
-//       } else {
-//         res.status(400).json({
-//           errorMessage: "Username already in use!",
-//         });
-//       }
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//       res.status(500).json({
-//         errorMessage: "Failed to register new user",
-//       });
-//     });
-// });
 
 /**
  * @api {post} /api/users/login
