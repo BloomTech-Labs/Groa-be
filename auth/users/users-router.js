@@ -97,7 +97,7 @@ router.get("/:id/registerid", (req, res) => {
   Users.getUserById(req.params.id)
     .then(res => {
       console.log('response|||||||||||||||||||||||||', res);
-      res.send.json([res]);
+      res.send.json({res:res});
     })
     .catch(err => console.log('error fetching id', err))
 })
