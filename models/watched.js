@@ -1,9 +1,9 @@
-const db = require("../../database/dbConfig.js");
+const db = require("../database/dbConfig.js");
 
 module.exports = {
   addToWatched,
   getWatched,
-  getWatchedById
+  getWatchedById,
 };
 // here out of laziness and for DS
 async function addToWatched(movie) {
@@ -11,7 +11,7 @@ async function addToWatched(movie) {
     .select("*")
     .where("letterboxd_uri", movie.letterboxd_uri)
     .andWhere("user_id", movie.user_id)
-    .then(watched => {
+    .then((watched) => {
       if (watched.length === 0) {
         return db("user_watched").insert(movie, "id");
       }
@@ -23,7 +23,5 @@ function getWatched(user_id) {
 }
 
 function getWatchedById(id) {
-  return db("user_watched")
-    .where("id", id)
-    .first();
+  return db("user_watched").where("id", id).first();
 }
