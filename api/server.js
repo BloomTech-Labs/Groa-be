@@ -23,6 +23,7 @@ server.use("/docs", express.static("./docs"));
 server.use(
   "/api/users", 
   userRouter,
+
   // OKTA Route Protection middleware
   // authentincationRequired,
 
@@ -50,8 +51,8 @@ server.use(
  *  "Error: Couldn't connect to server"
  *
  */
-server.get("/", authentincationRequired, (req, res) => {
-  res.status(200).json("Welcome to the Backend of Groa, if you are seen this you are logged in");
+server.get("/", (req, res) => {
+  res.status(200).json("Welcome to the Backend of Groa");
 });
 
 module.exports = server;
