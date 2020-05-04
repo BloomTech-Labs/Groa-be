@@ -3,11 +3,11 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 const userRouter = require("../auth/users/users-router.js");
-const uploadingRouter = require("../routes/uploading-router.js");
-const recommendationsRouter = require("../routes/recommendations-router.js");
-const groaUserRatingRouter = require("../routes/groa-user-rating-router.js");
-const groaWatchListRouter = require("../routes/groa-watchlist-router.js");
-const movieRouter = require("../movies/movies-router");
+const uploadingRouter = require("../routers/uploading-router.js");
+const recommendationsRouter = require("../routers/recommendations-router.js");
+const groaUserRatingRouter = require("../routers/groa-user-rating-router.js");
+const groaWatchListRouter = require("../routers/groa-watchlist-router.js");
+const movieRouter = require("../routers/movies-router.js");
 
 const server = express();
 
