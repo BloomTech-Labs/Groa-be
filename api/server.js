@@ -3,18 +3,18 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 const userRouter = require("../auth/users/users-router.js");
-const uploadingRouter = require("../users_movie_data/uploading-router.js");
-const recommendationsRouter = require("../recommendations/recommendations-router.js");
-const groaUserRatingRouter = require("../users_movie_data/groa-user-rating-router.js");
-const groaWatchListRouter = require("../users_movie_data/groa-watchlist-router.js");
-const movieRouter = require("../movies/movies-router")
+const uploadingRouter = require("../routes/uploading-router.js");
+const recommendationsRouter = require("../routes/recommendations-router.js");
+const groaUserRatingRouter = require("../routes/groa-user-rating-router.js");
+const groaWatchListRouter = require("../routes/groa-watchlist-router.js");
+const movieRouter = require("../movies/movies-router");
 
 const server = express();
 
 server.use(helmet());
 server.use(
   cors({
-    origin: "*"
+    origin: "*",
   })
 );
 server.use(express.json());
