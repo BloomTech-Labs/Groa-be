@@ -4,10 +4,10 @@ const helmet = require("helmet");
 
 const userRouter = require("../auth/users/users-router.js");
 const uploadingRouter = require("../users_movie_data/uploading-router.js");
-const recommendationsRouter = require("../recommendations/recommendations-router.js");
-const groaUserRatingRouter = require("../users_movie_data/groa-user-rating-router.js");
-const groaWatchListRouter = require("../users_movie_data/groa-watchlist-router.js");
-const movieRouter = require("../movies/movies-router")
+const recommendationsRouter = require("../routers/recommendations-router.js");
+const groaUserRatingRouter = require("../routers/groa-user-rating-router.js");
+const groaWatchListRouter = require("../routers/groa-watchlist-router.js");
+const movieRouter = require("../routers/movies-router.js");
 const authentincationRequired = require('../config/authenticationRequired');
 const server = express();
 
