@@ -9,15 +9,15 @@ router.use(
     parseNested: true,
     useTempFiles: true,
     tempFileDir: "/tmp/",
-    cleanup: true
+    cleanup: true,
   })
 );
 
 // model functions
-const { addRating } = require("./user_table_models/ratings.js");
-const { addReview } = require("./user_table_models/reviews.js");
-const { addToWatched } = require("./user_table_models/watched.js");
-const { addToWatchList } = require("./user_table_models/watch_list.js");
+const { addRating } = require("../models/ratings.js");
+const { addReview } = require("../models/reviews.js");
+const { addToWatched } = require("../models/watched.js");
+const { addToWatchList } = require("../models/watch_list.js");
 const { getUserById, getUserData } = require("../auth/users/users-model");
 
 router.post("/:user_id/uploading", async (req, res) => {
@@ -26,7 +26,7 @@ router.post("/:user_id/uploading", async (req, res) => {
   //https://www.npmjs.com/package/unzipper for docs on how to do this.
   fs.createReadStream(tempFilePath)
     .pipe(unzipper.Parse())
-    .on("entry", function(entry) {
+    .on("entry", function (entry) {
       const fileName = entry.path;
 
       /**
@@ -49,7 +49,7 @@ router.post("/:user_id/uploading", async (req, res) => {
           // parsing csv -> json to insert
           .pipe(csv())
           // takes data from csv files to structure them into the correct format and types for db
-          .on("data", function(data) {
+          .on("data", function (data) {
             // updateable variable to make sure data types are correct before inserting into database
             let parsed = {
               date: new Date(data.Date + "Z"),
@@ -57,7 +57,7 @@ router.post("/:user_id/uploading", async (req, res) => {
               year: Number(data.Year),
               // letterboxd_uri: data["Letterboxd URI"],
               rating: data.Rating !== "" ? data.Rating * 1 : undefined, //
-              user_id: Number(req.params.user_id)
+              user_id: Number(req.params.user_id),
             };
             // seperating files
             switch (name) {
@@ -65,7 +65,7 @@ router.post("/:user_id/uploading", async (req, res) => {
                 parsed = { ...parsed };
                 addRating(parsed)
                   .then(() => null)
-                  .catch(err => console.log(err.message));
+                  .catch((err) => console.log(err.message));
                 break;
               case "reviews.csv":
                 // may have to update rating data type based on Niki's response
@@ -76,11 +76,11 @@ router.post("/:user_id/uploading", async (req, res) => {
                   rewatch: data.Rewatch,
                   review: cleanedReview,
                   tags: data.Tags,
-                  watched_date: data["Watched Date"]
+                  watched_date: data["Watched Date"],
                 };
                 addReview(parsed)
                   .then(() => null)
-                  .catch(err => console.log(err.message));
+                  .catch((err) => console.log(err.message));
                 break;
               case "watched.csv":
                 parsed = {
@@ -88,11 +88,11 @@ router.post("/:user_id/uploading", async (req, res) => {
                   name: data.Name,
                   year: Number(data.Year),
                   letterboxd_uri: data["Letterboxd URI"],
-                  user_id: Number(req.params.user_id)
+                  user_id: Number(req.params.user_id),
                 };
                 addToWatched(parsed)
                   .then(() => null)
-                  .catch(err => console.log(err.message));
+                  .catch((err) => console.log(err.message));
                 break;
               case "watchlist.csv":
                 parsed = {
@@ -100,11 +100,11 @@ router.post("/:user_id/uploading", async (req, res) => {
                   name: data.Name,
                   year: Number(data.Year),
                   // letterboxd_uri: data["Letterboxd URI"],
-                  user_id: Number(req.params.user_id)
+                  user_id: Number(req.params.user_id),
                 };
                 addToWatchList(parsed)
                   .then(() => null)
-                  .catch(err => console.log(err.message));
+                  .catch((err) => console.log(err.message));
                 break;
               default:
                 let err = new Error(
@@ -132,16 +132,18 @@ router.post("/:user_id/uploading", async (req, res) => {
         default:
           entry.autodrain();
       }
+    });
+  const user = await getUserById(req.params.user_id);
+  await getUserData(user.user_name)
+    .then((user) => {
+      res.status(200).json(user);
     })
-    const user = await getUserById(req.params.user_id)
-    await getUserData(user.user_name)
-    .then(user => {
-      res.status(200).json(user)
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(500).json({ message: "Something went wrong retrieving your information."})
-    })
+    .catch((err) => {
+      console.log(err);
+      res
+        .status(500)
+        .json({ message: "Something went wrong retrieving your information." });
+    });
 });
 
 module.exports = router;

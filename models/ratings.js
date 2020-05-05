@@ -1,4 +1,4 @@
-const db = require("../../database/dbConfig.js");
+const db = require("../database/dbConfig.js");
 
 module.exports = {
   addRating,
@@ -51,7 +51,7 @@ function getRatingById(id) {
  */
 function getRatings(user_id) {
   return db("user_ratings as ur")
-    .join("movies as m", "ur.movie_id", "=" ,"m.movie_id")
+    .join("movies as m", "ur.movie_id", "=", "m.movie_id")
     .select(
       "ur.rating_id",
       "ur.date",
