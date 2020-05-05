@@ -1,11 +1,11 @@
-const db = require("../database/dbConfig.js");
+const db = require("../../database/dbConfig.js");
 const request = require("supertest");
-const server = require("../api/server.js");
+const server = require("../../api/server.js");
 
-beforeEach(async function() {
+beforeEach(async function () {
   await db.raw("TRUNCATE users RESTART IDENTITY CASCADE");
 });
-afterEach(async function() {
+afterEach(async function () {
   await db.raw("TRUNCATE user_ratings RESTART IDENTITY CASCADE");
 });
 
@@ -17,7 +17,7 @@ describe("POST /users/:user_id/add-movie-rating", () => {
       .send({
         name: "American Psycho",
         year: 2000,
-        rating: 3
+        rating: 3,
       });
 
     expect(res.status).toBe(201);

@@ -14,7 +14,7 @@ const server = express();
 server.use(helmet());
 server.use(
   cors({
-    origin: "*"
+    origin: "*",
   })
 );
 server.use(express.json());

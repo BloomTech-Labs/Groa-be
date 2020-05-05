@@ -1,13 +1,10 @@
 const router = require("express").Router();
 
 // model functions
-const {
-  addRating,
-  getRatings
-} = require("./user_table_models/ratings.js");
+const { addRating, getRatings } = require("../models/ratings.js");
 
 // middleware
-const validateRatingBody = require("./middleware/validateRatingBody.js");
+const validateRatingBody = require("../database/middleware/validateRatingBody.js");
 
 /**
  * @api {post} /users/:user_id/add-movie-rating
@@ -42,17 +39,17 @@ router.post("/:user_id/add-movie-rating", validateRatingBody, (req, res) => {
     date: new Date(),
     movie_id: req.body.movie_id,
     rating: req.body.rating * 1,
-    user_id: Number(req.params.user_id)
+    user_id: Number(req.params.user_id),
   };
   addRating(newRating)
-    .then(rated => {
+    .then((rated) => {
       res.status(201).json(rated);
     })
-    .catch(err =>
+    .catch((err) =>
       res.status(500).json({
         message: "Sorry. Something went wrong while trying to add this rating.",
         error: err,
-        error_message: err.message
+        error_message: err.message,
       })
     );
 });
@@ -101,12 +98,12 @@ router.post("/:user_id/add-movie-rating", validateRatingBody, (req, res) => {
  */
 router.get("/:user_id/get-ratings", (req, res) => {
   getRatings(req.params.user_id)
-    .then(ratings => res.status(200).json(ratings))
-    .catch(err =>
+    .then((ratings) => res.status(200).json(ratings))
+    .catch((err) =>
       res.status(500).json({
         message: "Something went wrong in gettings ratings.",
         error: err,
-        errorMessage: err.message
+        errorMessage: err.message,
       })
     );
 });

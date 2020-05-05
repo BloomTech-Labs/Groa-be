@@ -2,7 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const router = express.Router();
 
-const Recommendations = require("./recommendations-model");
+const Recommendations = require("../models/recommendations-model.js");
 
 /**
  * @api {get} /users/:user_id/recommendations
@@ -74,16 +74,19 @@ const Recommendations = require("./recommendations-model");
  */
 router.get("/:id/recommendations", (req, res) => {
   const { id } = req.params;
-  Recommendations.getLatestRecommendations(id)
-    .then((res) => {
-      console.log(res)
-      if(res){
-        const recParams = res
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  // * For use at a later time *
+  //
+  // Recommendations.getLatestRecommendations(id)
+  //   .then((res) => {
+  //     console.log(res)
+  //     if(res){
+  //       const recParams = res
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+
   axios
     .post(
       process.env.RECOMMENDATION_URL,

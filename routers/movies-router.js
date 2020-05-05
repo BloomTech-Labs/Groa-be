@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const { getAllMovies } = require("./movies-model");
+const { getAllMovies } = require("../models/movies-model.js");
 
 router.get("/:user_id/get-movies", (req, res) => {
   getAllMovies(req.params.user_id)
