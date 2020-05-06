@@ -57,6 +57,7 @@ function getRatings(user_id) {
       "ur.date",
       "m.primary_title",
       "m.start_year",
+      "m.description",
       "ur.rating",
       "ur.user_id",
       "m.poster_url"
