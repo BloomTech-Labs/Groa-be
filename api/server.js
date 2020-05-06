@@ -3,7 +3,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 const userRouter = require("../auth/users/users-router.js");
-const uploadingRouter = require("../users_movie_data/uploading-router.js");
+const uploadingRouter = require("../routers/uploading-router.js");
 const recommendationsRouter = require("../routers/recommendations-router.js");
 const groaUserRatingRouter = require("../routers/groa-user-rating-router.js");
 const groaWatchListRouter = require("../routers/groa-watchlist-router.js");
