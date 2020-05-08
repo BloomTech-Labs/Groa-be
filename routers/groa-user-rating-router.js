@@ -39,7 +39,7 @@ router.post("/:user_id/add-movie-rating", validateRatingBody, (req, res) => {
     date: new Date(),
     movie_id: req.body.movie_id,
     rating: req.body.rating * 1,
-    user_id: Number(req.params.user_id),
+    user_id: req.params.user_id,
   };
   addRating(newRating)
     .then((rated) => {

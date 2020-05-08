@@ -5,6 +5,7 @@ module.exports = {
   findBy,
   getUserById,
   findUsers,
+  getUserDataByOktaId,
   getUserData
 };
 
@@ -27,11 +28,38 @@ function findBy(user_name) {
     .first();
 }
 
-function getUserById(id) {
+function getUserById(user_id) {
   return db("users")
-    .where({ id })
-    .first();
+          .where({ user_id })
+          .select('*')
+          .first();
 }
+
+// function findByOktaId(okta_id) {
+//   return db("users")
+//           .where("okta_id", okta_id)
+//           .first();
+// } 
+
+async function getUserDataByOktaId(okta_id) {
+  let user = await getUserById(okta_id)
+  .select("*")
+  await db("user_ratings")
+  .where("user_id", user.user_id)
+  .then(ratings => {
+    user = {
+      ...user, ratings
+    }
+  })
+  await db("user_watchlist")
+  .where("user_id", user.user_id)
+  .then(watchlist => {
+    user = {
+      ...user, watchlist
+    }
+  })
+  return user;
+};
 
 function findUsers() {
   return db("users")
