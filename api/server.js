@@ -51,8 +51,8 @@ server.use(
  *  "Error: Couldn't connect to server"
  *
  */
-server.get("/", (req, res) => {
-  res.status(200).json("Welcome to the Backend of Groa");
+server.get("/", authentincationRequired, (req, res) => {
+  res.status(200).json("Welcome to the Backend of Groa, if you see this you are AUTH");
 });
 
 module.exports = server;

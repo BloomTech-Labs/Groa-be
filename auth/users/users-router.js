@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Users = require("./users-model");
 const client = require('../../config/oktaClient');
+const authentincationRequired = require('../../config/authenticationRequired');
 
 /**
  * @api {post} /api/users/register
@@ -87,6 +88,33 @@ router.post("/register", (req, res) => {
         });
   })
   .catch(err => res.status(500).json({error: err}));
+})
+
+router.post("/test", (req, res) => {
+  Users.getUserData(req.body.email)
+    .then(user => {
+      res.status(200).json(user)
+    })
+    .catch(err => console.log("error test", err))
+})
+
+
+router.post("/login", authentincationRequired, (req, res) => {
+  let {id} = req.body
+  console.log("REQ>BODY HEREEEE",req.body);
+  Users.getUserDataByOktaId(id)
+    .then(user => {
+      res.status(200).json({
+        message: `${user.user_name} Logged In!`,
+        user_id: user.user_id,
+        ratings: user.ratings,
+        watchlist: user.watchlist,
+      });
+    })
+    .catch(error => {
+      console.log("Error Fetching User Info after okta logging", error);
+      res.status(500).json({ errorMessage: "Error Fetching User Info" });
+    })
 })
 
 
