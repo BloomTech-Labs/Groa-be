@@ -49,21 +49,18 @@ router.post("/register", (req, res) => {
 
     //user object that will be posted to GROA BE to keep recommendation model working
     const userTable = {
-      user_name: email,
       okta_id: user.id,
-      email: email,
     }
-    
-      Users.findBy(userTable.user_name)
-        .then((user) => {
-          //if user_name does not exist, create new user
-          if (!user) {
+    const userEmail = user.profile.email;
+      // Users.findBy(userTable.user_name)
+      //   .then((user) => {
+      //     //if user_name does not exist, create new user
+      //     if (!user) {
             Users.add(userTable)
               .then((user) => {
                 res.status(201).json({
-                  message: `Registration successful ${user.user_name}, please confirm you Email to complete account registration!`,
+                  message: `Registration successful ${userEmail}, please confirm you Email to complete account registration!`,
                   user_id: user.user_id,
-                  okta_id: user.okta_id,
                 });
               })
               .catch((err) => {
@@ -73,19 +70,19 @@ router.post("/register", (req, res) => {
                   error: err,
                 });
               });
-          } else {
-            res.status(400).json({
-              errorMessage: "Username already in use!",
-            });
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          res.status(500).json({
-            errorMessage: "Error creating new user",
-            error: error,
-          });
-        });
+          // } else {
+          //   res.status(400).json({
+          //     errorMessage: "Username already in use!",
+          //   });
+          // }
+        
+        // .catch((error) => {
+        //   console.log(error);
+        //   res.status(500).json({
+        //     errorMessage: "Error creating new user",
+        //     error: error,
+        //   });
+        // });
   })
   .catch(err => res.status(500).json({error: err}));
 })
