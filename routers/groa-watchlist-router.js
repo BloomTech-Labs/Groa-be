@@ -11,7 +11,7 @@ router.post("/:user_id/add-to-watchlist", (req, res) => {
   const movie = {
     date: new Date(),
     movie_id: req.body.movie_id,
-    user_id: Number(req.params.user_id),
+    user_id: req.params.user_id,
   };
   addToWatchList(movie)
     .then((response) => {
