@@ -49,9 +49,9 @@ router.post("/register", (req, res) => {
 
     //user object that will be posted to GROA BE to keep recommendation model working
     const userTable = {
-      okta_id: user.id,
+      user_id: user.id,
     }
-    const userEmail = user.profile.email;
+    // const userEmail = user.profile.email;
       // Users.findBy(userTable.user_name)
       //   .then((user) => {
       //     //if user_name does not exist, create new user
@@ -59,7 +59,7 @@ router.post("/register", (req, res) => {
             Users.add(userTable)
               .then((user) => {
                 res.status(201).json({
-                  message: `Registration successful ${userEmail}, please confirm you Email to complete account registration!`,
+                  message: `Registration successful, please confirm you Email to complete account registration!`,
                   user_id: user.user_id,
                 });
               })
