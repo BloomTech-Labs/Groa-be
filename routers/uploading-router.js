@@ -57,7 +57,7 @@ router.post("/:user_id/uploading", async (req, res) => {
               year: Number(data.Year),
               // letterboxd_uri: data["Letterboxd URI"],
               rating: data.Rating !== "" ? data.Rating * 1 : undefined, //
-              user_id: Number(req.params.user_id),
+              user_id: req.params.user_id,
             };
             // seperating files
             switch (name) {
@@ -88,7 +88,7 @@ router.post("/:user_id/uploading", async (req, res) => {
                   name: data.Name,
                   year: Number(data.Year),
                   letterboxd_uri: data["Letterboxd URI"],
-                  user_id: Number(req.params.user_id),
+                  user_id: req.params.user_id,
                 };
                 addToWatched(parsed)
                   .then(() => null)
@@ -100,7 +100,7 @@ router.post("/:user_id/uploading", async (req, res) => {
                   name: data.Name,
                   year: Number(data.Year),
                   // letterboxd_uri: data["Letterboxd URI"],
-                  user_id: Number(req.params.user_id),
+                  user_id: req.params.user_id,
                 };
                 addToWatchList(parsed)
                   .then(() => null)
