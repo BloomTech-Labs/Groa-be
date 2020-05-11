@@ -32,6 +32,7 @@ function getWatchlist(user_id) {
       "wl.date",
       "m.primary_title",
       "m.start_year",
+      "m.description",
       "wl.user_id",
       "m.poster_url"
     )
