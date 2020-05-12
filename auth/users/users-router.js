@@ -28,48 +28,6 @@ const authentincationRequired = require('../../config/authenticationRequired');
  *    errorMessage: "Username already in use!"
  *  }
  */
-router.post("/register", (req, res) => {
-
-  console.log('REQUESTSSS', req.body);
-  const { firstName, lastName, email } = req.body;
-
-  // user object to be passed to okta api to create a new user, (must be in exact order per api guidelines)
-  const newUser = {
-    profile: {
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      login: email,
-    },
-  };
-
-  //okta api method that creates new user
-  client.createUser(newUser,)
-  .then(user => {
-    //user object that will be posted to GROA BE to keep recommendation model working
-    const userTable = {
-      user_id: user.id,
-    }
-
-    Users.add(userTable)
-      .then((user) => {
-        res.status(201).json({
-          message: `Registration successful, please confirm you Email to complete account registration!`,
-          user_id: user.user_id,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json({
-          errorMessage: "Failed to register new user 1",
-          error: err,
-        });
-      });
-  })
-  .catch(err => res.status(500).json({error: err}));
-})
-
-
 router.post("/login", authentincationRequired, (req, res) => {
   let {id} = req.body;  
   //user object to be posted to Groa DB if id isn't found
