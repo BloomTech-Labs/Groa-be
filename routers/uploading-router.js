@@ -14,10 +14,10 @@ router.use(
 );
 
 // model functions
-const { addRating } = require("../models/ratings.js");
-const { addReview } = require("../models/reviews.js");
-const { addToWatched } = require("../models/watched.js");
-const { addToWatchList } = require("../models/watch_list.js");
+const { addUploadRating } = require("../models/ratings.js");
+const { addUploadReview } = require("../models/reviews.js");
+const { addUploadToWatched } = require("../models/watched.js");
+const { addUploadToWatchList } = require("../models/watch_list.js");
 const { getUserById, getUserData } = require("../auth/users/users-model");
 
 router.post("/:user_id/uploading", async (req, res) => {
@@ -53,8 +53,8 @@ router.post("/:user_id/uploading", async (req, res) => {
             // updateable variable to make sure data types are correct before inserting into database
             let parsed = {
               date: new Date(data.Date + "Z"),
-              name: data.Name,
-              year: Number(data.Year),
+              primary_title: data.Name,
+              start_year: Number(data.Year),
               // letterboxd_uri: data["Letterboxd URI"],
               rating: data.Rating !== "" ? data.Rating * 1 : undefined, //
               user_id: req.params.user_id,
@@ -63,7 +63,7 @@ router.post("/:user_id/uploading", async (req, res) => {
             switch (name) {
               case "ratings.csv":
                 parsed = { ...parsed };
-                addRating(parsed)
+                addUploadRating(parsed)
                   .then(() => null)
                   .catch((err) => console.log(err.message));
                 break;
@@ -73,36 +73,35 @@ router.post("/:user_id/uploading", async (req, res) => {
                 parsed = {
                   ...parsed,
                   // letterboxd_uri: data["Letterboxd URI"],
-                  rewatch: data.Rewatch,
-                  review: cleanedReview,
+                  review_text: cleanedReview,
                   tags: data.Tags,
                   watched_date: data["Watched Date"],
                 };
-                addReview(parsed)
+                addUploadReview(parsed)
                   .then(() => null)
                   .catch((err) => console.log(err.message));
                 break;
               case "watched.csv":
                 parsed = {
                   date: new Date(data.Date + "Z"),
-                  name: data.Name,
-                  year: Number(data.Year),
-                  letterboxd_uri: data["Letterboxd URI"],
+                  primary_title: data.Name,
+                  start_year: Number(data.Year),
+                  // letterboxd_uri: data["Letterboxd URI"],
                   user_id: req.params.user_id,
                 };
-                addToWatched(parsed)
+                addUploadToWatched(parsed)
                   .then(() => null)
                   .catch((err) => console.log(err.message));
                 break;
               case "watchlist.csv":
                 parsed = {
                   date: new Date(data.Date + "Z"),
-                  name: data.Name,
-                  year: Number(data.Year),
+                  primary_title: data.Name,
+                  start_year: Number(data.Year),
                   // letterboxd_uri: data["Letterboxd URI"],
                   user_id: req.params.user_id,
                 };
-                addToWatchList(parsed)
+                addUploadToWatchList(parsed)
                   .then(() => null)
                   .catch((err) => console.log(err.message));
                 break;
@@ -134,7 +133,7 @@ router.post("/:user_id/uploading", async (req, res) => {
       }
     });
   const user = await getUserById(req.params.user_id);
-  await getUserData(user.user_name)
+  await getUserData(user.email)
     .then((user) => {
       res.status(200).json(user);
     })
