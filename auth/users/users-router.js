@@ -51,55 +51,70 @@ router.post("/register", (req, res) => {
     const userTable = {
       user_id: user.id,
     }
-    // const userEmail = user.profile.email;
-      // Users.findBy(userTable.user_name)
-      //   .then((user) => {
-      //     //if user_name does not exist, create new user
-      //     if (!user) {
-            Users.add(userTable)
-              .then((user) => {
-                res.status(201).json({
-                  message: `Registration successful, please confirm you Email to complete account registration!`,
-                  user_id: user.user_id,
-                });
-              })
-              .catch((err) => {
-                console.log(err);
-                res.status(500).json({
-                  errorMessage: "Failed to register new user 1",
-                  error: err,
-                });
-              });
-          // } else {
-          //   res.status(400).json({
-          //     errorMessage: "Username already in use!",
-          //   });
-          // }
-        
-        // .catch((error) => {
-        //   console.log(error);
-        //   res.status(500).json({
-        //     errorMessage: "Error creating new user",
-        //     error: error,
-        //   });
-        // });
+
+    Users.add(userTable)
+      .then((user) => {
+        res.status(201).json({
+          message: `Registration successful, please confirm you Email to complete account registration!`,
+          user_id: user.user_id,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({
+          errorMessage: "Failed to register new user 1",
+          error: err,
+        });
+      });
   })
   .catch(err => res.status(500).json({error: err}));
 })
 
-router.post("/test", (req, res) => {
-  Users.getUserData(req.body.email)
-    .then(user => {
-      res.status(200).json(user)
-    })
-    .catch(err => console.log("error test", err))
-})
-
 
 router.post("/login", authentincationRequired, (req, res) => {
-  let {id} = req.body
-  console.log("REQ>BODY HEREEEE",req.body);
-  Users.getUserDataByOktaId(id)
+  console.log('||||||||||||||||||||||||||||||OKTA',req.body);
+  let {id} = req.body;
+
+  const userTable = {
+    user_id: id,
+  }
+
+  console.log('Users.getUserDataByOktaID', Users.getUserDataByOktaId(id));
+
+  async function isUserInGroa(Users, oktaId){    
+    let myUser = await Users.getUserDataByOktaId(oktaId);
+    console.log('*************', myUser)
+    return myUser;
+  }
+  
+   if(!isUserInGroa(Users, id)){
+    console.log('[[[[[[[[[[[[[[[[[[',userTable)
+
+    Users.add(userTable)
+      .then(() => {
+        Users.getUserDataByOktaId(id)
+        .then(user => {
+          res.status(200).json({
+            message: `${user.user_name} Logged In!`,
+            user_id: user.user_id,
+            ratings: user.ratings,
+            watchlist: user.watchlist,
+          });
+        })
+        .catch(error => {
+          console.log("Error Fetching User Info after okta logging", error);
+          res.status(500).json({ errorMessage: "Error Fetching User Info" });
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({
+          errorMessage: "Failed to register Authenticated users",
+          error: err,
+        });
+      });
+  } else {
+    Users.getUserDataByOktaId(id)
     .then(user => {
       res.status(200).json({
         message: `${user.user_name} Logged In!`,
@@ -109,9 +124,12 @@ router.post("/login", authentincationRequired, (req, res) => {
       });
     })
     .catch(error => {
-      console.log("Error Fetching User Info after okta logging", error);
-      res.status(500).json({ errorMessage: "Error Fetching User Info" });
+      res.status(500).json({ 
+        errorMessage: "Error Fetching User Info",
+        message: error,
+     });
     })
+  }  
 })
 
 
