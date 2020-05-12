@@ -5,6 +5,8 @@ module.exports = {
   getWatchlist,
   getListItemById,
   removeMovieFromWatchList,
+  getMovieByName,
+  addUploadToWatchList,
 };
 
 async function addToWatchList(movie) {
@@ -50,4 +52,24 @@ function removeMovieFromWatchList(id) {
       .then(() => "Success")
       .catch((err) => err);
   });
+}
+
+function getMovieByName(upload) {
+  return db("movies as m")
+    .select("movie_id")
+    .where("primary_title", upload.primary_title)
+    .andWhere("start_year", upload.start_year);
+}
+
+async function addUploadToWatchList(upload) {
+  let movie_id = await getMovieByName(upload);
+  await db("user_watchlist")
+    .select("*")
+    .where("movie_id", movie_id)
+    .andWhere("user_id", upload.user_id)
+    .then((watchlist) => {
+      if (watchlist.length === 0) {
+        return db("user_watchlist").insert(upload, "id");
+      }
+    });
 }
