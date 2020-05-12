@@ -4,11 +4,13 @@ module.exports = {
   addRating,
   getRatingById,
   getRatings,
+  getMovieByName,
+  addUploadRating,
 };
 
 /**
  * Inserts or updates a rating to the database for the Groa site
- * @param {object} rating - date, name, year, rating, user_id
+ * @param {object} rating - date, movie_id, start_year, rating, user_id
  * @returns {ratedMovie}
  */
 async function addRating(rating) {
@@ -63,4 +65,37 @@ function getRatings(user_id) {
       "m.poster_url"
     )
     .where("ur.user_id", user_id);
+}
+
+function getMovieByName(upload) {
+  return db("movies as m")
+    .select("movie_id")
+    .where("primary_title", upload.primary_title)
+    .andWhere("start_year", upload.start_year);
+}
+
+async function addUploadRating(upload) {
+  let movie_id = await getMovieByName(upload);
+
+  const ratings = await db("user_ratings")
+    .select("*")
+    .where("movie_id", movie_id)
+    .andWhere("user_id", rating.user_id);
+
+  if (ratings.length === 0) {
+    const ids = await db("user_ratings").insert(rating, "rating_id");
+
+    const [id] = ids;
+    const added = await getRatingById(id);
+    return added;
+  } else {
+    const ids = await db("user_ratings")
+      .where("movie_id", movie_id)
+      .andWhere("user_id", rating.user_id)
+      .update("rating", rating.rating, "rating_id");
+
+    const [id] = ids;
+    const updated = await getRatingById(id);
+    return updated;
+  }
 }
