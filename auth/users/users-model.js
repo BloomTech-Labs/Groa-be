@@ -29,11 +29,6 @@ function getUserById(user_id) {
   return db("users").where({ user_id }).select("*").first();
 }
 
-// function findByOktaId(okta_id) {
-//   return db("users")
-//           .where("okta_id", okta_id)
-//           .first();
-// }
 
 async function getUserDataByOktaId(okta_id) {
   let user = await getUserById(okta_id).select("*");
