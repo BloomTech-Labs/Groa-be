@@ -46,7 +46,6 @@ router.post("/register", (req, res) => {
   //okta api method that creates new user
   client.createUser(newUser,)
   .then(user => {
-
     //user object that will be posted to GROA BE to keep recommendation model working
     const userTable = {
       user_id: user.id,
@@ -72,25 +71,25 @@ router.post("/register", (req, res) => {
 
 
 router.post("/login", authentincationRequired, (req, res) => {
-  console.log('||||||||||||||||||||||||||||||OKTA',req.body);
-  let {id} = req.body;
-
-  const userTable = {
+  let {id} = req.body;  
+  //user object to be posted to Groa DB if id isn't found
+  const newUser = {
     user_id: id,
-  }
+  }  
 
-  console.log('Users.getUserDataByOktaID', Users.getUserDataByOktaId(id));
-
-  async function isUserInGroa(Users, oktaId){    
-    let myUser = await Users.getUserDataByOktaId(oktaId);
-    console.log('*************', myUser)
-    return myUser;
-  }
-  
-   if(!isUserInGroa(Users, id)){
-    console.log('[[[[[[[[[[[[[[[[[[',userTable)
-
-    Users.add(userTable)
+  Users.getUserDataByOktaId(id)
+    .then(res => {
+      //USER EXISTS IN GROA DB, RETURN INFO
+      res.status(200).json({
+        message: `${user.user_name} Logged In!`,
+        user_id: user.user_id,
+        ratings: user.ratings,
+        watchlist: user.watchlist,
+      });
+    })      
+    .catch(err => {
+      //ADD NEW USER TO GROA DB
+      Users.add(newUser)
       .then(() => {
         Users.getUserDataByOktaId(id)
         .then(user => {
@@ -102,34 +101,15 @@ router.post("/login", authentincationRequired, (req, res) => {
           });
         })
         .catch(error => {
-          console.log("Error Fetching User Info after okta logging", error);
-          res.status(500).json({ errorMessage: "Error Fetching User Info" });
+          res.status(500).json({ 
+            errorMessage: "Error Adding new User after Okta registration",
+         });
         })
       })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json({
-          errorMessage: "Failed to register Authenticated users",
-          error: err,
-        });
-      });
-  } else {
-    Users.getUserDataByOktaId(id)
-    .then(user => {
-      res.status(200).json({
-        message: `${user.user_name} Logged In!`,
-        user_id: user.user_id,
-        ratings: user.ratings,
-        watchlist: user.watchlist,
-      });
+      .catch(err => {
+          res.status(500).json({ errorMessage: "LOGIN/REGISTRATION FAILED" });
+      })
     })
-    .catch(error => {
-      res.status(500).json({ 
-        errorMessage: "Error Fetching User Info",
-        message: error,
-     });
-    })
-  }  
 })
 
 
