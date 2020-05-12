@@ -43,6 +43,7 @@ router.post("/login", authentincationRequired, (req, res) => {
         user_id: user.user_id,
         ratings: user.ratings,
         watchlist: user.watchlist,
+        newUser: false,
       });
     })      
     .catch(err => {
@@ -56,6 +57,7 @@ router.post("/login", authentincationRequired, (req, res) => {
             user_id: user.user_id,
             ratings: user.ratings,
             watchlist: user.watchlist,
+            newUser: true,
           });
         })
         .catch(error => {
