@@ -63,7 +63,8 @@ function getRatings(user_id) {
       "ur.rating",
       "ur.user_id",
       "m.poster_url",
-      "m.trailer_url"
+      "m.trailer_url",
+      "m.genres"
     )
     .where("ur.user_id", user_id);
 }
