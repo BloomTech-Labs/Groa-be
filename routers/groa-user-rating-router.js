@@ -98,7 +98,9 @@ router.post("/:user_id/add-movie-rating", validateRatingBody, (req, res) => {
  */
 router.get("/:user_id/get-ratings", (req, res) => {
   getRatings(req.params.user_id)
-    .then((ratings) => res.status(200).json(ratings))
+    .then((ratings) => {
+      res.status(200).json(ratings)
+    })
     .catch((err) =>
       res.status(500).json({
         message: "Something went wrong in gettings ratings.",
