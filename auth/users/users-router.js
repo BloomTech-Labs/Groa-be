@@ -36,10 +36,10 @@ router.post("/login", authentincationRequired, (req, res) => {
   }  
 
   Users.getUserDataByOktaId(id)
-    .then(res => {
+    .then(user => {
       //USER EXISTS IN GROA DB, RETURN INFO
       res.status(200).json({
-        message: `${user.user_name} Logged In!`,
+        message: `Logged In!`,
         user_id: user.user_id,
         ratings: user.ratings,
         watchlist: user.watchlist,
@@ -53,7 +53,7 @@ router.post("/login", authentincationRequired, (req, res) => {
         Users.getUserDataByOktaId(id)
         .then(user => {
           res.status(200).json({
-            message: `${user.user_name} Logged In!`,
+            message: `Logged In!`,
             user_id: user.user_id,
             ratings: user.ratings,
             watchlist: user.watchlist,
@@ -71,6 +71,5 @@ router.post("/login", authentincationRequired, (req, res) => {
       })
     })
 })
-
 
 module.exports = router;
