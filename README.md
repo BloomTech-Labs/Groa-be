@@ -7,7 +7,7 @@
 
 #### Backend delpoyed at [AWS Elastic Beanstalk](https://api.groa.us) <br>
 
-## Getting started
+## Getting started!
 
 To get the server running locally:
 
@@ -21,6 +21,7 @@ To get the server running locally:
 Express
 
 - RESTful API
+
 - Straightforward sever construction
 - Stable and widely used
 - Can be built upon
@@ -31,8 +32,8 @@ Express
 
 | Method | Endpoint                                     | Access Control | Description                                                                                                                                                                                                                                      |
 | ------ | -------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| POST   | `/api/users/register`                        |                | Creates a new user.                                                                                                                                                                                                                              |
-| POST   | `/api/users/login`                           |                | Logs in an existing user.                                                                                                                                                                                                                        |
+| ~~POST~~   | ~~`/api/users/register`~~                        |                | ~~Creates a new user in Okta~~ Dashboard.                                                                                                                                                                                                                              |
+| POST   | `/api/users/login`                           |                | Logs in an existing user and handles authenticated user not in the groa database.                                                                                                                                                                                                                        |
 | POST   | `/api/users/:user_id/uploading`              |                | Uploads zip file from Letterboxd, unzips, parses and cleans each file and adds them to their respective tables in the database. If a movie with the same name and year exists on the users account it will update variable information in place. |
 | POST   | `/api/users/:user_id/add-movie-rating`       |                | Adds a rating object to the groa_users_ratings table, If a movie with the same name and year exists on the users account it will update the rating information in place.                                                                         |
 | GET    | `/api/users/:user_id/get-movies`             |                | Returns a json file of all the movies in the database.                                                                                                                                                                                           |
@@ -49,7 +50,8 @@ Express
 ```
 {
   user_id: INTEGER, INCREMENTS
-  user_name: STRING, UNIQUE
+  okta_id: STRING,
+  user_name: STRING, EMAIL IS USERNAME UNIQUE
   password: STRING,
   has_letterboxd: BOOLEAN,
   has_imdb: BOOLEAN,

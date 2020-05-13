@@ -1,25 +1,25 @@
-const bcrypt = require("bcryptjs");
 const express = require("express");
-const { signToken } = require("../authenticate-middleware.js");
 const router = express.Router();
-
 const Users = require("./users-model");
+const client = require('../../config/oktaClient');
+const authentincationRequired = require('../../config/authenticationRequired');
 
 /**
  * @api {post} /api/users/register
  * @apiName Register a user
  * @apiGroup Auth
  *
- * @apiParam {string} username **Required** | _Unique_ | The desired username of a new user
- * @apiParam {string} password **Required** | A password of at least 6 characters
- * @apiParam {string} email  _Unique_ | A valid email of a user
+ * @apiParam {string} firstName **Required** to post new user to okta's point
+ * @apiParam {string} lastname **Required** required to post new user to okta's enpoint
+ * @apiParam {string} email  _Unique_ | A valid email of a user, user will have to authenticate email to veryfy account
  *
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 201 Created
  *  {
- *    "message": "Registration successful potatochip!",
- *    "id": 31501823437723
- *  }
+    "message": "Registration successful user@email.com, please confirm you Email to complete account registration!",
+    "user_id": 3175,
+    "okta_id": "uaxv8xvs468Z3ZaTMzt4x6"
+}
  *
  * @apiError UniqueUsernameError The <code>req.body.user_name</code> is already in database.
  * @apiErrorExample {json} Error-Response:
@@ -28,84 +28,48 @@ const Users = require("./users-model");
  *    errorMessage: "Username already in use!"
  *  }
  */
-router.post("/register", (req, res) => {
-  let userData = req.body;
-  // process.env.HASHING_ROUNDS should be used at a later time.
-  const hash = bcrypt.hashSync(userData.password, 12);
-  userData.password = hash;
-  Users.findBy(userData.user_name)
-    .then((user) => {
-      if (!user) {
-        Users.add(userData)
-          .then((user) => {
-            res.status(200).json({
-              message: `Registration successful ${user.user_name}!`,
-              user_id: user.user_id,
-            });
-          })
-          .catch((err) => {
-            console.log(err);
-            res.status(500).json({
-              errorMessage: "Failed to register new user",
-            });
-          });
-      } else {
-        res.status(400).json({
-          errorMessage: "Username already in use!",
-        });
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).json({
-        errorMessage: "Failed to register new user",
-      });
-    });
-});
+router.post("/login", authentincationRequired, (req, res) => {
+  let {id} = req.body;  
+  //user object to be posted to Groa DB if id isn't found
+  const newUser = {
+    user_id: id,
+  }  
 
-/**
- * @api {post} /api/users/login
- * @apiName Login a user
- * @apiGroup Auth
- *
- * @apiParam {string} username **Required** | _Unique_ | Must match an existing user
- * @apiParam {string} password **Required** | Must match password of username
- *
- * @apiSuccessExample Success-Response:
- *  HTTP/1.1 201 Created
- *  {
- *    "message": "Registration successful potatochip!",
- *    "id": 31501823437723
- *  }
- *
- * @apiError AuthenticationFailed User credentials are not valid.
- * @apiErrorExample {json} Error-Response:
- *  HTTP/1.1 400
- *  {
- *    "message": "Failed to login"
- *  }
- */
-router.post("/login", (req, res) => {
-  let { user_name, password } = req.body;
-  Users.getUserData(user_name)
-    .then((user) => {
-      if (user && bcrypt.compareSync(password, user.password)) {
-        const token = signToken(user);
-        res.status(200).json({
-          message: `${user.user_name} Logged In!`,
-          token,
-          user_id: user.user_id,
-          ratings: user.ratings,
-          watchlist: user.watchlist,
-        });
-      } else {
-        res.status(401).json({ message: "Failed to login" });
-      }
+  Users.getUserDataByOktaId(id)
+    .then(user => {
+      //USER EXISTS IN GROA DB, RETURN INFO
+      res.status(200).json({
+        message: `Logged In!`,
+        user_id: user.user_id,
+        ratings: user.ratings,
+        watchlist: user.watchlist,
+        newUser: false,
+      });
+    })      
+    .catch(err => {
+      //ADD NEW USER TO GROA DB
+      Users.add(newUser)
+      .then(() => {
+        Users.getUserDataByOktaId(id)
+        .then(user => {
+          res.status(200).json({
+            message: `Logged In!`,
+            user_id: user.user_id,
+            ratings: user.ratings,
+            watchlist: user.watchlist,
+            newUser: true,
+          });
+        })
+        .catch(error => {
+          res.status(500).json({ 
+            errorMessage: "Error Adding new User after Okta registration",
+         });
+        })
+      })
+      .catch(err => {
+          res.status(500).json({ errorMessage: "LOGIN/REGISTRATION FAILED" });
+      })
     })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).json({ errorMessage: "Failed to retrieve credentials " });
-    });
-});
+})
 
 module.exports = router;
