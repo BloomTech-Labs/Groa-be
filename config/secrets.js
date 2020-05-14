@@ -10,5 +10,5 @@ module.exports = {
     //     clientSecret: ''
     // },
 
-    jwtSecret: process.env.JWT_SECRET || 'secret code'
+    jwtSecret: process.env.JWT_SECRET 
 }
