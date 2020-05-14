@@ -12,7 +12,7 @@ const oktaJwtVerifier = new OktaJwtVerifier({
    * A simple middleware that asserts valid access tokens and sends 401 responses
    * if the token is not present or fails validation.  If the token is valid its
    * contents are attached to req.jwt
-   **/
+   */
   const authenticationRequired = (req, res, next) => {
 
     const authHeader = req.headers.authorization || "";

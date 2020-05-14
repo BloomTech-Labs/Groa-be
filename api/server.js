@@ -3,6 +3,8 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 const userRouter = require("../auth/users/users-router.js");
+const uploadingRouter = require("../routers/uploading-router.js");
+const recommendationsRouter = require("../routers/recommendations-router.js");
 const groaUserRatingRouter = require("../routers/groa-user-rating-router.js");
 const groaWatchListRouter = require("../routers/groa-watchlist-router.js");
 const movieRouter = require("../routers/movies-router.js");
@@ -26,6 +28,8 @@ server.use(
   authentincationRequired,
 
   //GROA BE Routes
+  uploadingRouter,
+  recommendationsRouter,
   groaUserRatingRouter,
   groaWatchListRouter,
   movieRouter
@@ -35,6 +39,7 @@ server.use(
  * @api {get} /
  * @apiName Test if Server is Running
  * @apiGroup Server
+ *
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *
