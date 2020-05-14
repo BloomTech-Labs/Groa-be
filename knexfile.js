@@ -5,12 +5,6 @@ const dbConnection = process.env.DATABASE_URL;
 const dbObj = {
   client: "postgresql",
   connection: dbConnection,
-  migrations: {
-    directory: "./database/migrations"
-  },
-  seeds: {
-    directory: "./database/seeds"
-  },
   pool: {
     min: 2,
     max: 10,

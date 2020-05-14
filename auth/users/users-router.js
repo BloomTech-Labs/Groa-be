@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const Users = require("./users-model");
-const client = require('../../config/oktaClient');
 const authentincationRequired = require('../../config/authenticationRequired');
 
 /**
