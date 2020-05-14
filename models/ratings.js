@@ -69,35 +69,35 @@ function getRatings(user_id) {
     .where("ur.user_id", user_id);
 }
 
-// function getMovieByName(upload) {
-//   return db("movies as m")
-//     .select("movie_id")
-//     .where("primary_title", upload.primary_title)
-//     .andWhere("start_year", upload.start_year);
-// }
+function getMovieByName(upload) {
+  return db("movies as m")
+    .select("movie_id")
+    .where("primary_title", upload.primary_title)
+    .andWhere("start_year", upload.start_year);
+}
 
-// async function addUploadRating(upload) {
-//   let movie_id = await getMovieByName(upload);
+async function addUploadRating(upload) {
+  let movie_id = await getMovieByName(upload);
 
-//   const ratings = await db("user_ratings")
-//     .select("*")
-//     .where("movie_id", movie_id)
-//     .andWhere("user_id", rating.user_id);
+  const ratings = await db("user_ratings")
+    .select("*")
+    .where("movie_id", movie_id)
+    .andWhere("user_id", rating.user_id);
 
-//   if (ratings.length === 0) {
-//     const ids = await db("user_ratings").insert(rating, "rating_id");
+  if (ratings.length === 0) {
+    const ids = await db("user_ratings").insert(rating, "rating_id");
 
-//     const [id] = ids;
-//     const added = await getRatingById(id);
-//     return added;
-//   } else {
-//     const ids = await db("user_ratings")
-//       .where("movie_id", movie_id)
-//       .andWhere("user_id", rating.user_id)
-//       .update("rating", rating.rating, "rating_id");
+    const [id] = ids;
+    const added = await getRatingById(id);
+    return added;
+  } else {
+    const ids = await db("user_ratings")
+      .where("movie_id", movie_id)
+      .andWhere("user_id", rating.user_id)
+      .update("rating", rating.rating, "rating_id");
 
-//     const [id] = ids;
-//     const updated = await getRatingById(id);
-//     return updated;
-//   }
-// }
+    const [id] = ids;
+    const updated = await getRatingById(id);
+    return updated;
+  }
+}

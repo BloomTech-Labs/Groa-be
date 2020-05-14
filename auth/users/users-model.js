@@ -4,8 +4,9 @@ module.exports = {
   add,
   findBy,
   getUserById,
+  findUsers,
   getUserDataByOktaId,
-  //getUserData,
+  getUserData,
 };
 
 function add(user) {
@@ -28,6 +29,7 @@ function getUserById(user_id) {
   return db("users").where({ user_id }).select("*").first();
 }
 
+
 async function getUserDataByOktaId(okta_id) {
   let user = await getUserById(okta_id).select("*");
   await db("user_ratings")
@@ -49,23 +51,27 @@ async function getUserDataByOktaId(okta_id) {
   return user;
 }
 
-// async function getUserData(email) {
-//   let user = await findBy(email).select("*");
-//   await db("user_ratings")
-//     .where("user_id", user.user_id)
-//     .then((ratings) => {
-//       user = {
-//         ...user,
-//         ratings,
-//       };
-//     });
-//   await db("user_watchlist")
-//     .where("user_id", user.user_id)
-//     .then((watchlist) => {
-//       user = {
-//         ...user,
-//         watchlist,
-//       };
-//     });
-//   return user;
-// }
+function findUsers() {
+  return db("users").select("user_name", "user_id");
+}
+
+async function getUserData(email) {
+  let user = await findBy(email).select("*");
+  await db("user_ratings")
+    .where("user_id", user.user_id)
+    .then((ratings) => {
+      user = {
+        ...user,
+        ratings,
+      };
+    });
+  await db("user_watchlist")
+    .where("user_id", user.user_id)
+    .then((watchlist) => {
+      user = {
+        ...user,
+        watchlist,
+      };
+    });
+  return user;
+}
