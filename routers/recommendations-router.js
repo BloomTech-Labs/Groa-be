@@ -84,7 +84,11 @@ router.get("/:id/recommendations", (req, res) => {
         bad_threshold: 2.5,
         harshness: 1,
       },
-      { headers: { "Content-Type": "application/json" } }
+      { headers: { 
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Accept":"*/*", 
+      } }
     )
     .then((response) => {
       if (response.status === 200) {
