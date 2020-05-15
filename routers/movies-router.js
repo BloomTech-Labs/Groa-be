@@ -1,17 +1,19 @@
 const router = require("express").Router();
+const axios = require("axios");
 
 const { getAllMovies } = require("../models/movies-model.js");
 
 router.get("/:user_id/get-movies", (req, res) => {
-  getAllMovies(req.params.user_id)
+  axios
+    .get("https://ds.groa.us/explore")
     .then((movies) => {
-      res.status(200).json(movies);
+      if (movies.status === 200) res.status(200).json(movies.data.data);
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        message: "Something went wrong getting movies.",
-      });
+      console.error(err);
+      res
+        .status(500)
+        .json({ Error: err, ErrorMessage: "Unable to get movies" });
     });
 });
 module.exports = router;
