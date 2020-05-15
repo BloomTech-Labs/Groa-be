@@ -4,7 +4,6 @@ const router = express.Router();
 
 const Recommendations = require("../models/recommendations-model.js");
 
-
 /**
  * @api {get} /users/:user_id/recommendations
  * @apiName Get New Movie Recommendations
@@ -75,19 +74,6 @@ const Recommendations = require("../models/recommendations-model.js");
  */
 router.get("/:id/recommendations", (req, res) => {
   const { id } = req.params;
-  // * For use at a later time *
-  //
-  // Recommendations.getLatestRecommendations(id)
-  //   .then((res) => {
-  //     console.log(res)
-  //     if(res){
-  //       const recParams = res
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
-
   axios
     .post(
       process.env.RECOMMENDATION_URL,
@@ -113,118 +99,5 @@ router.get("/:id/recommendations", (req, res) => {
       });
     });
 });
-
-/**
- * @api {get} /users/:user_id/recommended
- * @apiName Get Already Recommended Movies
- * @apiGroup Recommendations
- *
- * @apiSuccessExample Success-Response:
- *  HTTP/1.1 200 Ok
- *  {
- *    "recommendation_json": [
- *      {
- *        "Title": "That Obscure Object of Desire",
- *        "Year": 1977,
- *        "IMDB URL": "https://www.imdb.com/title/tt0075824/",
- *        "Mean Rating": 7.9,
- *        "Votes": 18958,
- *        "Similarity": 0.5469637513160706,
- *        "ID": "0075824",
- *        "Gem": false,
- *        "Poster URL": "/9iUdC4dftkjYSBUJq5DAxC6WqB9.jpg"
- *      },
- *      {
- *        "Title": "La Dolce Vita",
- *        "Year": 1960,
- *        "IMDB URL": "https://www.imdb.com/title/tt0053779/",
- *        "Mean Rating": 8,
- *        "Votes": 61072,
- *        "Similarity": 0.5398253202438354,
- *        "ID": "0053779",
- *        "Gem": false,
- *        "Poster URL": "/mZJ25Th65B2KXM57uIiEzO3Aw81.jpg"
- *      }
- *    ]
- *  }
- *
- */
-
-router.get("/:id/recommended", (req, res) => {
-  const { id } = req.params;
-  Recommendations.getAllRecommendations(id)
-    .then((recommendations) => {
-      if (recommendations) {
-        res.status(200).json(recommendations);
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).json({
-        error,
-        errorMessage:
-          "Could not retrieve any recommendations for your account, try uploading a file.",
-      });
-    });
-});
-
-/**
- * @api {get} /users/:user_id/recommendation-history
- * @apiName Get ALL Previously Recommended Movies
- * @apiGroup Recommendations
- *
- * @apiSuccessExample Success-Response:
- *  HTTP/1.1 200 Ok
- *  {
- *    "user_id": 48485452324,
- *    "recommendation_id": "a39c6ee234beecf3e708267a8fd56efde2907",
- *    "recommendation_json": [
- *      {
- *        "Title": "That Obscure Object of Desire",
- *        "Year": 1977,
- *        "IMDB URL": "https://www.imdb.com/title/tt0075824/",
- *        "Mean Rating": 7.9,
- *        "Votes": 18958,
- *        "Similarity": 0.5469637513160706,
- *        "ID": "0075824",
- *        "Gem": false,
- *        "Poster URL": "/9iUdC4dftkjYSBUJq5DAxC6WqB9.jpg"
- *      },
- *      {
- *        "Title": "La Dolce Vita",
- *        "Year": 1960,
- *        "IMDB URL": "https://www.imdb.com/title/tt0053779/",
- *        "Mean Rating": 8,
- *        "Votes": 61072,
- *        "Similarity": 0.5398253202438354,
- *        "ID": "0053779",
- *        "Gem": false,
- *        "Poster URL": "/mZJ25Th65B2KXM57uIiEzO3Aw81.jpg"
- *      },
- *        "date": "2020-03-26T19:55:09.835Z",
- *        "model_type": "ratings model"
- *    ]
- *  }
- *
- */
-
-// router.get("/:id/recommendation-history", (req, res) => {
-//   const { id } = req.params;
-
-//   Recommendations.getAllRecommendations(id)
-//     .then((recommendations) => {
-//       if (recommendations) {
-//         res.status(200).json(recommendations);
-//       }
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//       res.status(500).json({
-//         error,
-//         errorMessage:
-//           "Could not retrieve any recommendations for your account, try uploading a file.",
-//       });
-//     });
-// });
 
 module.exports = router;
