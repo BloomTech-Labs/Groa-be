@@ -52,7 +52,7 @@ router.post("/:user_id/add-movie-rating", validateRatingBody, (req, res) => {
       console.log(error);
       res.status(500).json({
         errorMessage:
-          "Could not retrieve any recommendations for your account.",
+          "Could not add ratings for your account.",
       });
     });
 });
