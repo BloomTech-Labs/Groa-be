@@ -57,6 +57,7 @@ function getRatings(user_id) {
     .select(
       "ur.rating_id",
       "ur.date",
+      "ur.movie_id",
       "m.primary_title",
       "m.start_year",
       "m.description",
