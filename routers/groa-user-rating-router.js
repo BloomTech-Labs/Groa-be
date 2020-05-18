@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const axios = require("axios");
 
 // model functions
 const { addRating, getRatings } = require("../models/ratings.js");
@@ -36,22 +37,24 @@ const validateRatingBody = require("../database/middleware/validateRatingBody.js
  */
 router.post("/:user_id/add-movie-rating", validateRatingBody, (req, res) => {
   const newRating = {
-    date: new Date(),
     movie_id: req.body.movie_id,
     rating: req.body.rating * 1,
     user_id: req.params.user_id,
   };
-  addRating(newRating)
-    .then((rated) => {
-      res.status(201).json(rated);
+  axios
+    .post("https://ds.groa.us/rating", newRating)
+    .then((response) => {
+      if (response.status === 200) {
+        res.status(200).json(response.data.data);
+      }
     })
-    .catch((err) =>
+    .catch((error) => {
+      console.log(error);
       res.status(500).json({
-        message: "Sorry. Something went wrong while trying to add this rating.",
-        error: err,
-        error_message: err.message,
-      })
-    );
+        errorMessage:
+          "Could not retrieve any recommendations for your account.",
+      });
+    });
 });
 
 /**
@@ -99,7 +102,7 @@ router.post("/:user_id/add-movie-rating", validateRatingBody, (req, res) => {
 router.get("/:user_id/get-ratings", (req, res) => {
   getRatings(req.params.user_id)
     .then((ratings) => {
-      res.status(200).json(ratings)
+      res.status(200).json(ratings);
     })
     .catch((err) =>
       res.status(500).json({
