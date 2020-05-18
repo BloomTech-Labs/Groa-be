@@ -2,7 +2,7 @@ const router = require("express").Router();
 const axios = require("axios");
 
 // model functions
-const { addRating, getRatings } = require("../models/ratings.js");
+const { getRatings } = require("../models/ratings.js");
 
 // middleware
 const validateRatingBody = require("../database/middleware/validateRatingBody.js");
@@ -51,8 +51,7 @@ router.post("/:user_id/add-movie-rating", validateRatingBody, (req, res) => {
     .catch((error) => {
       console.log(error);
       res.status(500).json({
-        errorMessage:
-          "Could not add ratings for your account.",
+        errorMessage: "Could not add ratings for your account.",
       });
     });
 });
