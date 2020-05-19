@@ -25,7 +25,7 @@ server.use("/docs", express.static("./docs"));
 server.use(
   "/api/users",
   userRouter,
-
+  notwatchlistRouter,
   // OKTA Route Protection middleware
   authentincationRequired,
 
@@ -35,7 +35,6 @@ server.use(
   groaUserRatingRouter,
   groaWatchListRouter,
   movieRouter,
-  notwatchlistRouter,
   SearchRouter,
 );
 
