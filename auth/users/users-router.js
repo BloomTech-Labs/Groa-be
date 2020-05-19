@@ -33,7 +33,7 @@ router.post("/login", authentincationRequired, (req, res) => {
   //user object to be posted to Groa DB if id isn't found
   const newUser = {
     user_id: id,
-  }  
+  };
 
   Users.getUserDataByOktaId(id)
     .then(user => {
@@ -43,7 +43,6 @@ router.post("/login", authentincationRequired, (req, res) => {
         user_id: user.user_id,
         ratings: user.ratings,
         watchlist: user.watchlist,
-        newUser: false,
       });
     })      
     .catch(err => {
@@ -57,7 +56,6 @@ router.post("/login", authentincationRequired, (req, res) => {
             user_id: user.user_id,
             ratings: user.ratings,
             watchlist: user.watchlist,
-            newUser: true,
           });
         })
         .catch(error => {
