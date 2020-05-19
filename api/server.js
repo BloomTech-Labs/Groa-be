@@ -8,8 +8,9 @@ const recommendationsRouter = require("../routers/recommendations-router.js");
 const groaUserRatingRouter = require("../routers/groa-user-rating-router.js");
 const groaWatchListRouter = require("../routers/groa-watchlist-router.js");
 const movieRouter = require("../routers/movies-router.js");
+const notwatchlistRouter = require('../routers/notwatchlist-router.js');
 const SearchRouter = require("../routers/search.js");
-const authentincationRequired = require("../config/authenticationRequired");
+const authentincationRequired = require('../config/authenticationRequired');
 const server = express();
 
 server.use(helmet());
@@ -34,7 +35,8 @@ server.use(
   groaUserRatingRouter,
   groaWatchListRouter,
   movieRouter,
-  SearchRouter
+  notwatchlistRouter,
+  SearchRouter,
 );
 
 /**
