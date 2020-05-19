@@ -8,7 +8,8 @@ const recommendationsRouter = require("../routers/recommendations-router.js");
 const groaUserRatingRouter = require("../routers/groa-user-rating-router.js");
 const groaWatchListRouter = require("../routers/groa-watchlist-router.js");
 const movieRouter = require("../routers/movies-router.js");
-const authentincationRequired = require('../config/authenticationRequired');
+const SearchRouter = require("../routers/search.js");
+const authentincationRequired = require("../config/authenticationRequired");
 const server = express();
 
 server.use(helmet());
@@ -21,7 +22,7 @@ server.use(express.json());
 
 server.use("/docs", express.static("./docs"));
 server.use(
-  "/api/users", 
+  "/api/users",
   userRouter,
 
   // OKTA Route Protection middleware
@@ -32,7 +33,8 @@ server.use(
   recommendationsRouter,
   groaUserRatingRouter,
   groaWatchListRouter,
-  movieRouter
+  movieRouter,
+  SearchRouter
 );
 
 /**
@@ -52,7 +54,9 @@ server.use(
  *
  */
 server.get("/", authentincationRequired, (req, res) => {
-  res.status(200).json("Welcome to the Backend of Groa, if you see this you are AUTH");
+  res
+    .status(200)
+    .json("Welcome to the Backend of Groa, if you see this you are AUTH");
 });
 
 module.exports = server;
