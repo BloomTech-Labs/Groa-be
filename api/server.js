@@ -38,7 +38,7 @@ server.use(
   groaUserRatingRouter,
   groaWatchListRouter,
   movieRouter,
-  // SearchRouter,
+  SearchRouter,
 );
 
 /**
