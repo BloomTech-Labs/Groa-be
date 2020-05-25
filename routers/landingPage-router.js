@@ -1,18 +1,25 @@
 const router = require("express").Router();
 const axios = require("axios");
 
-router.get("/landingpage", (req, res) => {
+router.post("/landingpage", (req, res) => {
+    const {id} = req.body
+
     axios
-      .get("https://ds.groa.us/movie-list/35")
+      .get(`https://${process.env.DB_MOVIELIST_URL}/${id}`)
       .then((movies) => {
-        res.status(200).json(movies.data);
+        res
+        .status(200)
+        .json(movies.data);
       })
       .catch((err) => {
-        console.error(err);
         res
           .status(500)
-          .json({ Error: err, ErrorMessage: "Unable to get Landing Page movies" });
+          .json({ 
+              Error: err, 
+              ErrorMessage: "Unable to get Landing Page movie list" 
+            });
       });
   });
+  
   module.exports = router;
   
