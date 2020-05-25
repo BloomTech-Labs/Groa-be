@@ -3,14 +3,23 @@ const axios = require("axios");
 const router = express.Router();
 
 router.get('/:id/service-providers/:movie_id', (req, res) => {
-    const {id, movie_id} = req.params;
-    // console.log('rec', req.params)
+    const { id, movie_id } = req.params;
+    const serviceProviders = { user_id: id, movie_id: movie_id }
     axios
-        .get(`https://ds.groa.us/service-providers/${movie_id}`)
+        .get(`https://ds.groa.us/service-providers/${movie_id}`,
+        )
         .then((response) => {
-            console.log('this is response', response.data.data)
             if (response.status === 200) {
-                res.status(200).json(response.data.data)
+                const uniqueLinks = new Set();
+                const result = [];
+                response.data.data.forEach((provider) => {
+                    if (!uniqueLinks.has(provider.link)) {
+                        uniqueLinks.add(provider.link);
+                        result.push(provider);
+                    }
+                })
+                console.log('this is unique result', result);
+                res.status(200).json(result);
             }
         })
         .catch((error) => {
