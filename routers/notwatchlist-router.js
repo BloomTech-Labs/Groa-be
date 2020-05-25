@@ -17,8 +17,6 @@ router.post('/:id/notwatchlist', (req, res) => {
         }
         )
         .catch((error) => {
-            // console.log(error.response);
-            // console.log(error.status);
             res.status(500).json({
                 errorMessage: 'Could not remove from explore page.'
             })
