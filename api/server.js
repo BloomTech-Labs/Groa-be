@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 
+const landingRouter = require("../routers/landingPage-router");
 const userRouter = require("../auth/users/users-router.js");
 const uploadingRouter = require("../routers/uploading-router.js");
 const recommendationsRouter = require("../routers/recommendations-router.js");
@@ -28,6 +29,7 @@ server.use(
   userRouter,
   notwatchlistRouter,
   serviceProviders,
+  landingRouter,
 
   // OKTA Route Protection middleware
   authentincationRequired,
