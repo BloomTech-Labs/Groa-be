@@ -4,7 +4,6 @@ const router = express.Router();
 
 router.get('/:id/service-providers/:movie_id', (req, res) => {
     const { id, movie_id } = req.params;
-    const serviceProviders = { user_id: id, movie_id: movie_id }
     axios
         .get(`https://ds.groa.us/service-providers/${movie_id}`,
         )
@@ -13,8 +12,8 @@ router.get('/:id/service-providers/:movie_id', (req, res) => {
                 const uniqueLinks = new Set();
                 const result = [];
                 response.data.data.forEach((provider) => {
-                    if (!uniqueLinks.has(provider.link)) {
-                        uniqueLinks.add(provider.link);
+                    if (!uniqueLinks.has(provider.name)) {
+                        uniqueLinks.add(provider.name);
                         result.push(provider);
                     }
                 })
