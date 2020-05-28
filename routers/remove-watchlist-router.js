@@ -14,7 +14,6 @@ router.post('/watchlist/:id/remove/:movie_id', (req, res) => {
             console.log('this is to remove watchlist movie',res.data.data);
             if (response.status === 200) {
                 res.status(200).json(response.data.data)
-
             }
         }
         )
