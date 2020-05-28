@@ -10,6 +10,7 @@ const groaWatchListRouter = require("../routers/groa-watchlist-router.js");
 const movieRouter = require("../routers/movies-router.js");
 const notwatchlistRouter = require('../routers/notwatchlist-router.js');
 const serviceProviders = require('../routers/service-provider-router.js');
+const removeWatchlistRouter = require('../routers/remove-watchlist-router.js');
 const SearchRouter = require("../routers/search.js");
 const authentincationRequired = require('../config/authenticationRequired');
 const server = express();
@@ -27,6 +28,7 @@ server.use(
   "/api/users",
   userRouter,
   notwatchlistRouter,
+  removeWatchlistRouter,
   serviceProviders,
 
   // OKTA Route Protection middleware
