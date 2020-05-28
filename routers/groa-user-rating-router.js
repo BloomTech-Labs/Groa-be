@@ -7,34 +7,6 @@ const { getRatings } = require("../models/ratings.js");
 // middleware
 const validateRatingBody = require("../database/middleware/validateRatingBody.js");
 
-/**
- * @api {post} /users/:user_id/add-movie-rating
- * @apiName Rate a Movie
- * @apiGroup Ratings
- *
- * @apiParam {string} name **Required** | Title of the movie you want to rate.
- * @apiParam {integer} year **Required** | The year the movie was made.
- * @apiParam {float} rating **Required** | The rating, can be 0 - 5 and accepts 3.5
- *
- * @apiSuccessExample Success-Response:
- *  HTTP/1.1 201 Created
- *  {
- *    "id": 4006,
- *    "date": "2020-03-17T05:00:00.000Z",
- *    "name": "Young Frankenstein",
- *    "year": 1974,
- *    "rating": 4,
- *    "user_id": 48485
- *  }
- *
- * @apiError MissingBodyReqs The <code>req.body.param</code> was not found.
- * @apiErrorExample {json} Error-Response:
- *  HTTP/1.1 400
- *  {
- *    message: "Please send a movie name with this request."
- *  }
- *
- */
 router.post("/:user_id/add-movie-rating", validateRatingBody, (req, res) => {
   const newRating = {
     movie_id: req.body.movie_id,
@@ -52,6 +24,24 @@ router.post("/:user_id/add-movie-rating", validateRatingBody, (req, res) => {
       console.log(error);
       res.status(500).json({
         errorMessage: "Could not add ratings for your account.",
+      });
+    });
+});
+
+router.post("/:user_id/remove-rating", (req, res) => {
+  axios
+    .post(
+      `https://ds.groa.us/rating/${req.body.user_id}/remove/${req.body.movie_id}`
+    )
+    .then((response) => {
+      if (response.status === 200) {
+        res.status(200).json(response.data);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({
+        errorMessage: "Failed to Remove Movie",
       });
     });
 });
@@ -98,6 +88,7 @@ router.post("/:user_id/add-movie-rating", validateRatingBody, (req, res) => {
  *  }
  *
  */
+
 router.get("/:user_id/get-ratings", (req, res) => {
   getRatings(req.params.user_id)
     .then((ratings) => {
