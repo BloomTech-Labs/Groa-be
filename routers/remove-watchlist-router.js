@@ -2,13 +2,13 @@ const express = require("express");
 const axios = require("axios");
 const router = express.Router();
 
-router.post('/:id/notwatchlist', (req, res) => {
-    const {id} = req.params;
-    const notWatchlist = { user_id: id, movie_id: req.body.movie_id }
+router.post('/watchlist/:id/remove/:movie_id', (req, res) => {
+    const { id, movie_id } = req.params;
+    const removeWatchlist = { user_id: id, movie_id: movie_id }
+
     axios
-        .post(
-            process.env.NOTWATCHLIST_URL,
-            notWatchlist,
+        .post(`https://ds.groa.us/watchlist/${id}/remove/${movie_id}`,
+            removeWatchlist,
         )
         .then((response) => {
             if (response.status === 200) {
@@ -18,8 +18,9 @@ router.post('/:id/notwatchlist', (req, res) => {
         )
         .catch((error) => {
             res.status(500).json({
-                errorMessage: 'Could not remove from explore page.'
+                errorMessage: 'could not delete from watchlist.'
             })
         })
 })
+
 module.exports = router;
