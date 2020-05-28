@@ -4,14 +4,13 @@ const router = express.Router();
 
 router.post('/watchlist/:id/remove/:movie_id', (req, res) => {
     const { id, movie_id } = req.params;
-    const removeWatchlist = { user_id: id, movie_id: req.body.movie_id }
+    const removeWatchlist = { user_id: id, movie_id: movie_id }
 
     axios
         .post(`https://ds.groa.us/watchlist/${id}/remove/${movie_id}`,
             removeWatchlist,
         )
         .then((response) => {
-            console.log('this is to remove watchlist movie',res.data.data);
             if (response.status === 200) {
                 res.status(200).json(response.data.data)
             }
