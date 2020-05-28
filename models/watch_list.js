@@ -38,7 +38,8 @@ function getWatchlist(user_id) {
       "wl.user_id",
       "m.poster_url",
       "m.trailer_url",
-      "m.genres"
+      "m.genres",
+      "m.movie_id"
     )
     .where("wl.user_id", user_id);
 }
